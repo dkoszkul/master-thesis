@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
         widget->addObstacle((*it));
     }
 
+
     grid->addWidget(widget, 1, 1);
     w.setLayout(grid);
     w.show();
