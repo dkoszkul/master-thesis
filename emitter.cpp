@@ -5,7 +5,7 @@ Emitter::Emitter()
 
 }
 
-Emitter::Emitter(int positionX, int positionY, double angle) : Sensor(positionX,positionY,angle){
+Emitter::Emitter(int positionX, int positionY, double angle) : Object(positionX,positionY,angle){
 
 }
 

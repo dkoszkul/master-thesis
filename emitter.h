@@ -2,9 +2,9 @@
 #define EMITTER_H
 
 #include <iostream>
-#include "sensor.h"
+#include "object.h"
 
-class Emitter : public Sensor{
+class Emitter : public Object{
 public:
     Emitter();
     Emitter(int positionX,int positionY,double angle);

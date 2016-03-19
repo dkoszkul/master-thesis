@@ -1,8 +1,8 @@
-#ifndef SENSOR_H
-#define SENSOR_H
+#ifndef OBJECT_H
+#define OBJECT_H
 
 
-class Sensor{
+class Object{
 private:
     int positionX;
     int positionY;
@@ -13,8 +13,8 @@ public:
     int getPositionY();
     double getAngle();
 
-    Sensor();
-    Sensor(int positionX,int positionY,double angle);
+    Object();
+    Object(int positionX,int positionY,double angle);
 };
 
-#endif // SENSOR_H
+#endif // OBJECT_H
