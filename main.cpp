@@ -30,25 +30,25 @@ int main(int argc, char *argv[])
 
 
     list<Obstacle*> obstacles;
-    obstacles.push_back(new Obstacle(10,20,0));
-    obstacles.push_back(new Obstacle(10,10,0));
-    obstacles.push_back(new Obstacle(5,7,0));
+    obstacles.push_back(new Obstacle(100,120,0));
+    obstacles.push_back(new Obstacle(90,110,0));
+    obstacles.push_back(new Obstacle(190,190,0));
 
     list<Receiver*> sensors;
-    sensors.push_back(new Receiver(0,0,0));
-    sensors.push_back(new Receiver(0,30,0));
-    sensors.push_back(new Receiver(0,60,0));
+    sensors.push_back(new Receiver(20,100,0));
+    sensors.push_back(new Receiver(20,130,0));
+    sensors.push_back(new Receiver(20,160,0));
 
-    Emitter* emitter = new Emitter(-5,10,0);
+    Emitter* emitter = new Emitter(0,125,0);
 
+    for(list<Receiver*>::iterator it=sensors.begin();it!=sensors.end();it++){
+        widget->addReceiver((*it));
+    }
 
-    cout<<"emitter X "<<emitter->getPositionX()<<endl;
-    emitter->emitSignal();
+    widget->addEmitter(emitter);
 
-    list<Receiver*>::iterator it;
-    for(it=sensors.begin();it!=sensors.end();it++){
-        cout<<(*it)->getPositionY()<<endl;
-        widget->sensors.push_back((*it));
+    for(list<Obstacle*>::iterator it=obstacles.begin();it!=obstacles.end();it++){
+        widget->addObstacle((*it));
     }
 
     grid->addWidget(widget, 1, 1);
