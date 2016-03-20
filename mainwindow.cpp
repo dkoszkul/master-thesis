@@ -10,14 +10,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->simulation = new Simulation();
+
+    connect(ui->pushButton, &QPushButton::clicked, simulation, &Simulation::simulate);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-}
-
-void MainWindow::on_pushButton_clicked()
-{
-    std::cout<<"Fire the simulation"<<std::endl;
 }
