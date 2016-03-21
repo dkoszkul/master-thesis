@@ -8,20 +8,25 @@
 
 #include "constants.h"
 #include "object.h"
+#include "emitter.h"
+#include "receiver.h"
+#include "obstacle.h"
+
+using namespace std;
 
 class Simulation : public QObject
 {
     Q_OBJECT
 private:
     Object* emitter;
-    std::list<Object*> receivers;
-    std::list<Object*> obstacles;
+    std::list<Receiver*> receivers;
+    std::list<Obstacle*> obstacles;
 
 public:
     explicit Simulation(QObject *parent = 0);
     void setEmitter(Object* emitter);
-    void setReceivers(std::list<Object*> receivers);
-    void setObstacles(std::list<Object*> obstacles);
+    void setReceivers(const std::list<Receiver*> &receivers);
+    void setObstacles(const std::list<Obstacle*> &obstacles);
 
 public slots:
     void simulate();

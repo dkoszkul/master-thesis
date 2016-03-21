@@ -8,5 +8,7 @@
 #define TAU 130
 #define POW 2
 
+#define SPEED_OF_SOUND 343.2  // [m/s]
+
 
 #endif // CONSTANTS_H

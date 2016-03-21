@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include "simulation.h"
-
 namespace Ui {
 class MainWindow;
 }
+
+using namespace std;
 
 class MainWindow : public QMainWindow
 {

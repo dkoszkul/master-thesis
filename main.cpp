@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 
     list<Obstacle*> obstacles;
     obstacles.push_back(new Obstacle(100,120,0));
-    obstacles.push_back(new Obstacle(90,110,0));
+    obstacles.push_back(new Obstacle(120,150,0));
     obstacles.push_back(new Obstacle(190,190,0));
 
     list<Receiver*> sensors;

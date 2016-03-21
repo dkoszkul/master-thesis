@@ -24,3 +24,11 @@ int Object::getPositionY(){
 double Object::getAngle(){
     return this->angle;
 }
+
+double Object::getDistance(Object *object)
+{
+    int x = this->positionX - object->getPositionX();
+    int y = this->positionY - object->getPositionY();
+
+    return sqrt(pow(x,2)+pow(y,2));
+}
