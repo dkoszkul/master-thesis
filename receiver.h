@@ -8,6 +8,8 @@ using namespace std;
 class Receiver : public Object{
 private:
     list<double> times;
+    list<double> copyTimes;
+
     list<double> delays;
 
 public:
@@ -16,9 +18,13 @@ public:
     ~Receiver();
 
     void resetReceiver();
-    void addTime(int time);
+    void addTime(double time);
+    void addDelay(double delay);
     void countDelays();
     list<double> getDelays() const;
+    list<double> getTimes() const;
+    void setTimes(const list<double> &value);
+    list<double> getCopyTimes() const;
 };
 
 #endif // RECEIVER_H

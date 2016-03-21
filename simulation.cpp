@@ -41,17 +41,38 @@ void Simulation::simulate()
             std::cout<<"Distance between emitter to receiver ["<<(*r)->getPositionX()<<","<<(*r)->getPositionY()<<"] through obstacle ["<<(*o)->getPositionX()<<","<<(*o)->getPositionY();
             std::cout<<"] is equal to "<<distance<<", TOF = "<<time<<"[us]"<<std::endl;
         }
-        (*r)->countDelays();
-        list<double> delays = (*r)->getDelays();
-        /*for(list<double>::iterator t=delays.begin();t!=delays.end();t++){
-            double v =(*t);
-            std::cout<<"Delay "<<v<<std::endl;
-        }/*/
-
         std::cout<<"-------------------"<<std::endl;
     }
 
-
+    Receiver * referenceReceiver = receivers.front();
+    list<double> times = referenceReceiver->getTimes();
+    for(list<double>::iterator t=times.begin();t!=times.end();t++){
+        double time = (*t);
+        for(list<Receiver*>::iterator r=receivers.begin();r!=receivers.end();r++){
+            list<double> rTimes = (*r)->getTimes();
+            double maxDistanceBetweenSensorsInUs = ((referenceReceiver->getDistance((*r))/100)/SPEED_OF_SOUND)*pow(10,6);
+            for(list<double>::iterator tt=rTimes.begin();tt!=rTimes.end();tt++){
+                double timeDelay =(*tt) - time;
+                if(abs(timeDelay) <= maxDistanceBetweenSensorsInUs){
+                    (*r)->addDelay(timeDelay);
+                    tt = rTimes.erase(tt);
+                    (*r)->setTimes(rTimes);
+                    break;
+                }
+            }
+        }
+        t = times.erase(t);
+    }
+    for(list<Receiver*>::iterator r=receivers.begin();r!=receivers.end();r++){
+        (*r)->setTimes((*r)->getCopyTimes()); //this step is important after computing the delays to recover the TOF
+        cout<<(*r)->getTimes().size();
+        list<double> delays = (*r)->getDelays();
+        for(list<double>::iterator t=delays.begin();t!=delays.end();t++){
+            double v =(*t);
+            std::cout<<" "<<v;
+        }
+    cout<<endl;
+    }
 
 }
 
