@@ -5,6 +5,11 @@ Simulation::Simulation(QObject *parent) : QObject(parent)
 
 }
 
+Simulation::~Simulation()
+{
+
+}
+
 void Simulation::setEmitter(Object *emitter)
 {
     this->emitter=emitter;
@@ -38,10 +43,10 @@ void Simulation::simulate()
         }
         (*r)->countDelays();
         list<double> delays = (*r)->getDelays();
-        for(list<double>::iterator t=delays.begin();t!=delays.end();t++){
+        /*for(list<double>::iterator t=delays.begin();t!=delays.end();t++){
             double v =(*t);
             std::cout<<"Delay "<<v<<std::endl;
-        }
+        }/*/
 
         std::cout<<"-------------------"<<std::endl;
     }

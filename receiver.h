@@ -13,6 +13,7 @@ private:
 public:
     Receiver();
     Receiver(int positionX,int positionY,double angle);
+    ~Receiver();
 
     void resetReceiver();
     void addTime(int time);

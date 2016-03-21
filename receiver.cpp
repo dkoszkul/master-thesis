@@ -10,6 +10,11 @@ Receiver::Receiver(int positionX, int positionY, double angle) : Object(position
 
 }
 
+Receiver::~Receiver()
+{
+
+}
+
 void Receiver::resetReceiver()
 {
     times.clear();
