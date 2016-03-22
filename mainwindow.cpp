@@ -26,7 +26,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionConfigure->setEnabled(true);*/
 
     //ui->statusBar->addWidget(status);
-
+    ui->connectButton->setEnabled(true);
+    ui->disconnectButton->setEnabled(false);
+    ui->uartSettingsButton->setEnabled(true);
 
     this->simulation = new Simulation();
 
@@ -76,9 +78,9 @@ void MainWindow::openSerialPort()
     if (serial->open(QIODevice::ReadWrite)) {
         console->setEnabled(true);
         console->setLocalEchoEnabled(p.localEchoEnabled);
-        /*ui->actionConnect->setEnabled(false);
-        ui->actionDisconnect->setEnabled(true);
-        ui->actionConfigure->setEnabled(false);*/
+        ui->disconnectButton->setEnabled(true);
+        ui->connectButton->setEnabled(false);
+        ui->uartSettingsButton->setEnabled(false);
         showStatusMessage(tr("Connected to %1 : %2, %3, %4, %5, %6")
                           .arg(p.name).arg(p.stringBaudRate).arg(p.stringDataBits)
                           .arg(p.stringParity).arg(p.stringStopBits).arg(p.stringFlowControl));
@@ -93,12 +95,13 @@ void MainWindow::openSerialPort()
 //! [5]
 void MainWindow::closeSerialPort()
 {
-    if (serial->isOpen())
+    if (serial->isOpen()){
         serial->close();
+    }
     console->setEnabled(false);
-   /* ui->actionConnect->setEnabled(true);
-    ui->actionDisconnect->setEnabled(false);
-    ui->actionConfigure->setEnabled(true);*/
+    ui->disconnectButton->setEnabled(false);
+    ui->connectButton->setEnabled(true);
+    ui->uartSettingsButton->setEnabled(true);
     showStatusMessage(tr("Disconnected"));
 }
 
