@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->connectButton, SIGNAL(clicked()), this, SLOT(openSerialPort()));
     connect(ui->disconnectButton, SIGNAL(clicked()), this, SLOT(closeSerialPort()));
     connect(ui->clearConsoleButton, SIGNAL(clicked()), console, SLOT(clear()));
+
 }
 
 MainWindow::~MainWindow()
