@@ -59,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->disconnectButton, SIGNAL(clicked()), this, SLOT(closeSerialPort()));
     connect(ui->clearConsoleButton, SIGNAL(clicked()), console, SLOT(clear()));
 
+    connect(ui->startButton,SIGNAL(clicked()), this, SLOT(sendStartSignal()));
+    connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
 }
 
 MainWindow::~MainWindow()
@@ -145,4 +147,19 @@ void MainWindow::initActionsConnections()
 void MainWindow::showStatusMessage(const QString &message)
 {
     status->setText(message);
+}
+
+void MainWindow::sendStartSignal(){
+    std::cout<<"start"<<std::endl;
+  //  if (serial->open(QIODevice::ReadWrite)) {
+        console->putData("start\r\n");
+   // }
+}
+
+void MainWindow::sendStopSignal(){
+    std::cout<<"stop"<<std::endl;
+   // if (serial->open(QIODevice::ReadWrite)) {
+        console->putData("stop\r\n");
+   // }
+
 }
