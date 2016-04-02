@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets serialport
 TARGET = master
 TEMPLATE = app
 
+INCLUDEPATH+=/usr/local/qwt-6.1.2/include
+LIBS+=-L/usr/local/qwt-6.1.2/lib -lqwt
 
 SOURCES += main.cpp\
         mainwindow.cpp \

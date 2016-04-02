@@ -6,6 +6,9 @@
 
 #include <iostream>
 
+#include <qwt_plot.h>
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -20,15 +23,13 @@ MainWindow::MainWindow(QWidget *parent) :
     status = new QLabel;
     settings = new SettingsDialog;
 
-    /*ui->actionConnect->setEnabled(true);
-    ui->actionDisconnect->setEnabled(false);
-    ui->actionQuit->setEnabled(true);
-    ui->actionConfigure->setEnabled(true);*/
-
     //ui->statusBar->addWidget(status);
     ui->connectButton->setEnabled(true);
     ui->disconnectButton->setEnabled(false);
     ui->uartSettingsButton->setEnabled(true);
+
+    /* plots */
+    //ui->plotLayout->addWidget();
 
     this->simulation = new Simulation();
 
