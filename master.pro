@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     paintwidget.cpp \
     simulation.cpp \
     console/console.cpp \
-    console/settingsdialog.cpp
+    console/settingsdialog.cpp \
+    simulation/signal.cpp
 
 HEADERS  += mainwindow.h \
     emitter.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     constants.h \
     simulation.h \
     console/console.h \
-    console/settingsdialog.h
+    console/settingsdialog.h \
+    simulation/signal.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui

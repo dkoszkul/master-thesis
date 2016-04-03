@@ -8,9 +8,10 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
-
+#include <qwt_point_data.h>
 #include "simulation.h"
 #include "console/console.h"
+#include "simulation/signal.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -46,6 +47,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Simulation* simulation;
+    Signal* signal;
 
     void initActionsConnections();
     void showStatusMessage(const QString &message);
@@ -55,6 +57,24 @@ private:
     QSerialPort *serial;
     SettingsDialog *settings;
 
+};
+
+class FunctionData: public QwtSyntheticPointData
+{
+public:
+    FunctionData( double( *y )( double ) ):
+        QwtSyntheticPointData( 100 ),
+        d_y( y )
+    {
+    }
+
+    virtual double y( double x ) const
+    {
+        return d_y( x );
+    }
+
+private:
+    double( *d_y )( double );
 };
 
 #endif // MAINWINDOW_H

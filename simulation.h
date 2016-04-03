@@ -6,11 +6,12 @@
 
 #include <QObject>
 
-#include "constants.h"
+//#include "constants.h"
 #include "object.h"
 #include "emitter.h"
 #include "receiver.h"
 #include "obstacle.h"
+#include "simulation/signal.h"
 
 using namespace std;
 

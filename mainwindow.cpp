@@ -7,14 +7,18 @@
 #include <iostream>
 
 #include <qwt_plot.h>
-
+#include <qwt_plot_curve.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    simulation = new Simulation();
     console = new Console;
+    signal = new Signal();
+
+    ui->setupUi(this);
+
     console->setEnabled(false);
    // console->setMaximumHeight(100);
     ui->consoleLayout->addWidget(console);
@@ -30,8 +34,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     /* plots */
     //ui->plotLayout->addWidget();
+    QwtPlot* plot = new QwtPlot();
+    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
 
-    this->simulation = new Simulation();
+    plot->setAxisScale( plot->yLeft, -1.0, 1.0 );
+    QwtPlotCurve *cSin = new QwtPlotCurve( "y = sin(x)" );
+    cSin->setRenderHint( QwtPlotItem::RenderAntialiased );
+    cSin->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    cSin->setPen( Qt::red );
+    cSin->attach( plot );
+    cSin->setData( new FunctionData( ::sin ) );
+    ui->plotLayout->addWidget(plot);
 
     list<Obstacle*> obstacles;
     obstacles.push_back(new Obstacle(100,120,0));
@@ -49,6 +62,8 @@ MainWindow::MainWindow(QWidget *parent) :
     simulation->setReceivers(sensors);
     simulation->setObstacles(obstacles);
 
+
+
     connect(ui->pushButton, &QPushButton::clicked, simulation, &Simulation::simulate);
 
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
@@ -62,6 +77,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->startButton,SIGNAL(clicked()), this, SLOT(sendStartSignal()));
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
+
+    /* connections for plot tab */
+    connect(ui->plotsSignalsButton,&QPushButton::clicked, signal, &Signal::showSignals);
 }
 
 MainWindow::~MainWindow()
@@ -164,3 +182,5 @@ void MainWindow::sendStopSignal(){
    // }
 
 }
+
+
