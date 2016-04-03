@@ -2,7 +2,19 @@
 
 Signal::Signal(QObject *parent) : QObject(parent)
 {
-    times.push_back(20);
+
+    plot = new QwtPlot();
+    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    plot->setAxisScale( plot->yLeft, -1.5, 1.5 );
+    signalPlot = new QwtPlotCurve( "signal" );
+    signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+    signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    signalPlot->setPen( Qt::red );
+    signalPlot->attach( plot );
+
+    times.push_back(0);
+    times.push_back(205);
+    times.push_back(319);
 }
 
 Signal::~Signal()
@@ -10,24 +22,31 @@ Signal::~Signal()
 
 }
 
-std::vector<double> Signal::generateSignal()
+void Signal::generateSignal()
 {
     std::vector<double> result;
+    std::vector<double> timePlot;
+    double t = signalMin;
+    while(t<signalMax){
 
-    for(double time : times){
-        std::cout<<time<<std::endl;
-
-        double t = signalMin;
-        while(t<signalMax){
-            double signalValue = AMP * pow(t,POW)* exp(-t/TAU)*sin(2*PI*t/25);
-            std::cout<<"Time "<<t<<" value "<<signalValue<<std::endl;
-            result.push_back(signalValue);
-            t+=signalStep;
-        }
+        double signalValue = computeSignalValueInTime(t);
+        //std::cout<<"Time "<<t<<" value "<<signalValue<<std::endl;
+        result.push_back(signalValue);
+        timePlot.push_back(t);
+        t+=signalStep;
     }
 
-   // S(t)= t <= 0 ? 0 : Amp * t**Power * exp(-t/Tau) * sin(2*PI*t/25);
 
+    signalPlot->setSamples(timePlot.data(),result.data(),result.size());
+    plot->replot();
+}
+
+double Signal::computeSignalValueInTime(double actualTime){
+    double result = 0.0;
+    for(double t : times){
+        double time = actualTime-t;
+        result+= time<0 ? 0 : AMP * pow(time,POW)* exp(-time/TAU)*sin(2*PI*time/25);
+    }
     return result;
 }
 
@@ -39,4 +58,24 @@ void Signal::addTime(double time)
 void Signal::showSignals()
 {
     generateSignal();
+}
+
+QwtPlot *Signal::getPlot() const
+{
+    return plot;
+}
+
+void Signal::setPlot(QwtPlot *value)
+{
+    plot = value;
+}
+
+void Signal::clear()
+{
+    times.clear();
+}
+
+void Signal::setSignalPlot(QwtPlotCurve *value)
+{
+    signalPlot = value;
 }

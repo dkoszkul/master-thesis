@@ -8,6 +8,7 @@
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,25 +34,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->uartSettingsButton->setEnabled(true);
 
     /* plots */
-    //ui->plotLayout->addWidget();
-    QwtPlot* plot = new QwtPlot();
-    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    setupPlotsTab();
 
-    plot->setAxisScale( plot->yLeft, -1.0, 1.0 );
-    QwtPlotCurve *cSin = new QwtPlotCurve( "y = sin(x)" );
-    cSin->setRenderHint( QwtPlotItem::RenderAntialiased );
-    cSin->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
-    cSin->setPen( Qt::red );
-    cSin->attach( plot );
-    cSin->setData( new FunctionData( ::sin ) );
-    ui->plotLayout->addWidget(plot);
 
     list<Obstacle*> obstacles;
     obstacles.push_back(new Obstacle(100,120,0));
     obstacles.push_back(new Obstacle(120,150,0));
     obstacles.push_back(new Obstacle(190,190,0));
 
-    list<Receiver*> sensors;
     sensors.push_back(new Receiver(20,100,0));
     sensors.push_back(new Receiver(20,130,0));
     sensors.push_back(new Receiver(20,160,0));
@@ -62,24 +52,7 @@ MainWindow::MainWindow(QWidget *parent) :
     simulation->setReceivers(sensors);
     simulation->setObstacles(obstacles);
 
-
-
-    connect(ui->pushButton, &QPushButton::clicked, simulation, &Simulation::simulate);
-
-    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
-    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
-
-    connect(ui->uartSettingsButton, SIGNAL(clicked()), settings, SLOT(show()));
-    connect(ui->connectButton, SIGNAL(clicked()), this, SLOT(openSerialPort()));
-    connect(ui->disconnectButton, SIGNAL(clicked()), this, SLOT(closeSerialPort()));
-    connect(ui->clearConsoleButton, SIGNAL(clicked()), console, SLOT(clear()));
-
-    connect(ui->startButton,SIGNAL(clicked()), this, SLOT(sendStartSignal()));
-    connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
-
-    /* connections for plot tab */
-    connect(ui->plotsSignalsButton,&QPushButton::clicked, signal, &Signal::showSignals);
+    initActionsConnections();
 }
 
 MainWindow::~MainWindow()
@@ -154,13 +127,22 @@ void MainWindow::handleError(QSerialPort::SerialPortError error)
 
 void MainWindow::initActionsConnections()
 {
-    /*connect(ui->actionConnect, SIGNAL(triggered()), this, SLOT(openSerialPort()));
-    connect(ui->actionDisconnect, SIGNAL(triggered()), this, SLOT(closeSerialPort()));
-    connect(ui->actionQuit, SIGNAL(triggered()), this, SLOT(close()));
-    connect(ui->actionConfigure, SIGNAL(triggered()), settings, SLOT(show()));
-    connect(ui->actionClear, SIGNAL(triggered()), console, SLOT(clear()));
-    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(about()));
-    connect(ui->actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));*/
+    connect(ui->pushButton, &QPushButton::clicked, simulation, &Simulation::simulate);
+
+    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
+    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
+    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+
+    connect(ui->uartSettingsButton, SIGNAL(clicked()), settings, SLOT(show()));
+    connect(ui->connectButton, SIGNAL(clicked()), this, SLOT(openSerialPort()));
+    connect(ui->disconnectButton, SIGNAL(clicked()), this, SLOT(closeSerialPort()));
+    connect(ui->clearConsoleButton, SIGNAL(clicked()), console, SLOT(clear()));
+
+    connect(ui->startButton,SIGNAL(clicked()), this, SLOT(sendStartSignal()));
+    connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
+
+    /* connections for plot tab */
+    connect(ui->plotsSignalsButton,&QPushButton::clicked, signal, &Signal::showSignals);
 }
 
 void MainWindow::showStatusMessage(const QString &message)
@@ -183,4 +165,45 @@ void MainWindow::sendStopSignal(){
 
 }
 
+void MainWindow::setupPlotsTab()
+{
+   /* QwtPlot* plot = new QwtPlot();
+    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    plot->setAxisScale( plot->yLeft, -1.5, 1.5 );
+    QwtPlotCurve *cSin = new QwtPlotCurve( "signal" );
+    cSin->setRenderHint( QwtPlotItem::RenderAntialiased );
+    cSin->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    cSin->setPen( Qt::red );
+    cSin->attach( plot );
+
+    signal->setPlot(plot);
+    signal->setSignalPlot(cSin);*/
+
+ /*   QwtPlotMarker *mY = new QwtPlotMarker();
+    mY->setLabelAlignment( Qt::AlignRight | Qt::AlignTop );
+    mY->setLineStyle( QwtPlotMarker::HLine );
+    mY->setYValue( 0.0 );
+    mY->attach( plot );*/
+
+    Receiver* r = sensors.front();
+    Signal* sig = r->getSignal();
+     QwtPlot* plot = sig->getPlot();
+     if(plot != NULL){
+         std::cout<<"not null";
+     }else{
+         std::cout<<"null";
+     }
+
+   // ui->plotLayout->addWidget(plot); //FIXME: to nie dziala :(
+
+    QwtPlot* plot2 = new QwtPlot();
+    plot2->setAxisScale( plot2->xBottom, 0.0, 1500.0 );
+    plot2->setAxisScale( plot2->yLeft, -1.5, 1.5 );
+    QwtPlotCurve *c2Sin = new QwtPlotCurve( "signal2" );
+    c2Sin->setRenderHint( QwtPlotItem::RenderAntialiased );
+    c2Sin->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    c2Sin->setPen( Qt::red );
+    c2Sin->attach( plot2 );
+    ui->plotLayout->addWidget(plot2);
+}
 

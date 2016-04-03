@@ -1,28 +1,12 @@
 #include "receiver.h"
 
-
-list<double> Receiver::getTimes() const
-{
-    return times;
-}
-
-void Receiver::setTimes(const list<double> &value)
-{
-    times = value;
-}
-
-list<double> Receiver::getCopyTimes() const
-{
-    return copyTimes;
-}
-
 Receiver::Receiver()
 {
-    
+    signal = new Signal();
 }
 
 Receiver::Receiver(int positionX, int positionY, double angle) : Object(positionX,positionY,angle){
-
+    signal = new Signal();
 }
 
 Receiver::~Receiver()
@@ -59,4 +43,30 @@ void Receiver::countDelays()
 list<double> Receiver::getDelays() const
 {
     return delays;
+}
+
+list<double> Receiver::getTimes() const
+{
+    return times;
+}
+
+void Receiver::setTimes(const list<double> &value)
+{
+    times = value;
+}
+
+list<double> Receiver::getCopyTimes() const
+{
+    return copyTimes;
+}
+
+
+Signal *Receiver::getSignal() const
+{
+    return signal;
+}
+
+void Receiver::setSignal(Signal *value)
+{
+    signal = value;
 }

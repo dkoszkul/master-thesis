@@ -49,6 +49,8 @@ private:
     Simulation* simulation;
     Signal* signal;
 
+    list<Receiver*> sensors;
+
     void initActionsConnections();
     void showStatusMessage(const QString &message);
 
@@ -57,6 +59,7 @@ private:
     QSerialPort *serial;
     SettingsDialog *settings;
 
+    void setupPlotsTab();
 };
 
 class FunctionData: public QwtSyntheticPointData
