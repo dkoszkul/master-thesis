@@ -34,6 +34,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void createXAxisLine(QwtPlot* plot);
+    
 private slots:
     void openSerialPort();
     void closeSerialPort();

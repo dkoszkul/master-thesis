@@ -27,6 +27,7 @@ public:
     list<double> getTimes() const;
     void setTimes(const list<double> &value);
     list<double> getCopyTimes() const;
+
     Signal *getSignal() const;
     void setSignal(Signal *value);
 };
