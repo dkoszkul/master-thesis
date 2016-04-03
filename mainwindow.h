@@ -46,6 +46,8 @@ private slots:
 
     void handleError(QSerialPort::SerialPortError error);
 
+    void showSignals();
+
 private:
     Ui::MainWindow *ui;
     Simulation* simulation;

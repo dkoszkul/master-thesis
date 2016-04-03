@@ -124,7 +124,13 @@ void MainWindow::handleError(QSerialPort::SerialPortError error)
         closeSerialPort();
     }
 }
-//! [8]
+
+void MainWindow::showSignals()
+{
+    for(list<Receiver*>::iterator r=sensors.begin();r!=sensors.end();r++){
+        (*r)->getSignal()->showSignals();
+    }
+}
 
 void MainWindow::initActionsConnections()
 {
@@ -143,7 +149,7 @@ void MainWindow::initActionsConnections()
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
 
     /* connections for plot tab */
-    //  connect(ui->plotsSignalsButton,&QPushButton::clicked, signal, &Signal::showSignals);
+      connect(ui->plotsSignalsButton,&QPushButton::clicked, this, &MainWindow::showSignals);
 }
 
 void MainWindow::showStatusMessage(const QString &message)
@@ -166,15 +172,6 @@ void MainWindow::sendStopSignal(){
 
 }
 
-void MainWindow::createXAxisLine(QwtPlot* plot)
-{
-    QwtPlotMarker *mY = new QwtPlotMarker();
-    mY->setLabelAlignment( Qt::AlignRight | Qt::AlignTop );
-    mY->setLineStyle( QwtPlotMarker::HLine );
-    mY->setYValue( 0.0 );
-    mY->attach( plot );
-}
-
 void MainWindow::setupPlotsTab()
 {
     for(list<Receiver*>::iterator r=sensors.begin();r!=sensors.end();r++){
@@ -183,5 +180,14 @@ void MainWindow::setupPlotsTab()
         ui->plotLayout->addWidget(plot);
     }
 
+}
+
+void MainWindow::createXAxisLine(QwtPlot* plot)
+{
+    QwtPlotMarker *mY = new QwtPlotMarker();
+    mY->setLabelAlignment( Qt::AlignRight | Qt::AlignTop );
+    mY->setLineStyle( QwtPlotMarker::HLine );
+    mY->setYValue( 0.0 );
+    mY->attach( plot );
 }
 

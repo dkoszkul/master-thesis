@@ -30,7 +30,7 @@ public:
 
     QwtPlot *getPlot() const;
 
-public slots:
+public:
     void showSignals();
 
 private:
