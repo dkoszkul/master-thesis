@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     console->setEnabled(false);
-   // console->setMaximumHeight(100);
+    // console->setMaximumHeight(100);
     ui->consoleLayout->addWidget(console);
 
     serial = new QSerialPort(this);
@@ -33,8 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->disconnectButton->setEnabled(false);
     ui->uartSettingsButton->setEnabled(true);
 
-    /* plots */
-    setupPlotsTab();
+
 
 
     list<Obstacle*> obstacles;
@@ -53,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent) :
     simulation->setObstacles(obstacles);
 
     initActionsConnections();
+    /* plots */
+    setupPlotsTab();
 }
 
 MainWindow::~MainWindow()
@@ -142,7 +143,7 @@ void MainWindow::initActionsConnections()
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
 
     /* connections for plot tab */
-    connect(ui->plotsSignalsButton,&QPushButton::clicked, signal, &Signal::showSignals);
+    //  connect(ui->plotsSignalsButton,&QPushButton::clicked, signal, &Signal::showSignals);
 }
 
 void MainWindow::showStatusMessage(const QString &message)
@@ -152,49 +153,35 @@ void MainWindow::showStatusMessage(const QString &message)
 
 void MainWindow::sendStartSignal(){
     std::cout<<"start"<<std::endl;
-  //  if (serial->open(QIODevice::ReadWrite)) {
-        console->putData("start\r\n");
-   // }
+    //  if (serial->open(QIODevice::ReadWrite)) {
+    console->putData("start\r\n");
+    // }
 }
 
 void MainWindow::sendStopSignal(){
     std::cout<<"stop"<<std::endl;
-   // if (serial->open(QIODevice::ReadWrite)) {
-        console->putData("stop\r\n");
-   // }
+    // if (serial->open(QIODevice::ReadWrite)) {
+    console->putData("stop\r\n");
+    // }
 
 }
 
-void MainWindow::setupPlotsTab()
+void MainWindow::createXAxisLine(QwtPlot* plot)
 {
-    QwtPlot* plot = new QwtPlot();
-    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
-    plot->setAxisScale( plot->yLeft, -1.5, 1.5 );
-    QwtPlotCurve *cSin = new QwtPlotCurve( "signal" );
-    cSin->setRenderHint( QwtPlotItem::RenderAntialiased );
-    cSin->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
-    cSin->setPen( Qt::red );
-    cSin->attach( plot );
-
-    signal->setPlot(plot);
-    signal->setSignalPlot(cSin);
-
     QwtPlotMarker *mY = new QwtPlotMarker();
     mY->setLabelAlignment( Qt::AlignRight | Qt::AlignTop );
     mY->setLineStyle( QwtPlotMarker::HLine );
     mY->setYValue( 0.0 );
     mY->attach( plot );
+}
 
-   ui->plotLayout->addWidget(plot);
+void MainWindow::setupPlotsTab()
+{
+    for(list<Receiver*>::iterator r=sensors.begin();r!=sensors.end();r++){
+        QwtPlot* plot = (*r)->getSignal()->getPlot();
+        createXAxisLine(plot);
+        ui->plotLayout->addWidget(plot);
+    }
 
-    QwtPlot* plot2 = new QwtPlot();
-    plot2->setAxisScale( plot2->xBottom, 0.0, 1500.0 );
-    plot2->setAxisScale( plot2->yLeft, -1.5, 1.5 );
-    QwtPlotCurve *c2Sin = new QwtPlotCurve( "signal2" );
-    c2Sin->setRenderHint( QwtPlotItem::RenderAntialiased );
-    c2Sin->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
-    c2Sin->setPen( Qt::red );
-    c2Sin->attach( plot2 );
-    ui->plotLayout->addWidget(plot2);
 }
 

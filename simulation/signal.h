@@ -26,6 +26,10 @@ public:
     void setPlot(QwtPlot *value);
     void clear();
 
+    QwtPlotCurve *getSignalPlot() const;
+
+    QwtPlot *getPlot() const;
+
 public slots:
     void showSignals();
 

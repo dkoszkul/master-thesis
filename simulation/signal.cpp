@@ -2,6 +2,16 @@
 
 Signal::Signal(QObject *parent) : QObject(parent)
 {
+    plot = new QwtPlot();
+    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    plot->setAxisScale( plot->yLeft, -1.5, 1.5 );
+
+    signalPlot = new QwtPlotCurve( "signal" );
+    signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+    signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    signalPlot->setPen( Qt::red );
+    signalPlot->attach( plot );
+
     times.push_back(0);
     times.push_back(205);
     times.push_back(319);
@@ -48,6 +58,16 @@ void Signal::addTime(double time)
 void Signal::showSignals()
 {
     generateSignal();
+}
+
+QwtPlot *Signal::getPlot() const
+{
+    return plot;
+}
+
+QwtPlotCurve *Signal::getSignalPlot() const
+{
+    return signalPlot;
 }
 
 void Signal::setPlot(QwtPlot *value)
