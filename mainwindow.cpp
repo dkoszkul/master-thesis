@@ -167,7 +167,7 @@ void MainWindow::sendStopSignal(){
 
 void MainWindow::setupPlotsTab()
 {
-   /* QwtPlot* plot = new QwtPlot();
+    QwtPlot* plot = new QwtPlot();
     plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
     plot->setAxisScale( plot->yLeft, -1.5, 1.5 );
     QwtPlotCurve *cSin = new QwtPlotCurve( "signal" );
@@ -177,24 +177,15 @@ void MainWindow::setupPlotsTab()
     cSin->attach( plot );
 
     signal->setPlot(plot);
-    signal->setSignalPlot(cSin);*/
+    signal->setSignalPlot(cSin);
 
- /*   QwtPlotMarker *mY = new QwtPlotMarker();
+    QwtPlotMarker *mY = new QwtPlotMarker();
     mY->setLabelAlignment( Qt::AlignRight | Qt::AlignTop );
     mY->setLineStyle( QwtPlotMarker::HLine );
     mY->setYValue( 0.0 );
-    mY->attach( plot );*/
+    mY->attach( plot );
 
-    Receiver* r = sensors.front();
-    Signal* sig = r->getSignal();
-     QwtPlot* plot = sig->getPlot();
-     if(plot != NULL){
-         std::cout<<"not null";
-     }else{
-         std::cout<<"null";
-     }
-
-   // ui->plotLayout->addWidget(plot); //FIXME: to nie dziala :(
+   ui->plotLayout->addWidget(plot);
 
     QwtPlot* plot2 = new QwtPlot();
     plot2->setAxisScale( plot2->xBottom, 0.0, 1500.0 );

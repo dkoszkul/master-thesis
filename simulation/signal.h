@@ -5,6 +5,7 @@
 #include<list>
 #include<vector>
 #include <QObject>
+#include <QVBoxLayout>
 #include<cmath>
 #include "constants.h"
 
@@ -24,8 +25,6 @@ public:
     void setSignalPlot(QwtPlotCurve *value);
     void setPlot(QwtPlot *value);
     void clear();
-
-    QwtPlot *getPlot() const;
 
 public slots:
     void showSignals();
