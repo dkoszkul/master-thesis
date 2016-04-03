@@ -5,10 +5,10 @@
 #include <QGridLayout>
 #include <iostream>
 
-#include "object.h"
-#include "emitter.h"
-#include "receiver.h"
-#include "obstacle.h"
+#include "sensors/object.h"
+#include "sensors/emitter.h"
+#include "sensors/receiver.h"
+#include "sensors/obstacle.h"
 
 #include "paintwidget.h"
 

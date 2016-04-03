@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Receiver : public Object{
+class Receiver final : public Object{
 private:
     list<double> times;
     list<double> copyTimes;

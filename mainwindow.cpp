@@ -1,15 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "paintwidget.h"
-#include "console/settingsdialog.h"
-
-#include <iostream>
-
-#include <qwt_plot.h>
-#include <qwt_plot_curve.h>
-#include <qwt_plot_marker.h>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -149,7 +140,7 @@ void MainWindow::initActionsConnections()
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
 
     /* connections for plot tab */
-      connect(ui->plotsSignalsButton,&QPushButton::clicked, this, &MainWindow::showSignals);
+    connect(ui->plotsSignalsButton,&QPushButton::clicked, this, &MainWindow::showSignals);
 }
 
 void MainWindow::showStatusMessage(const QString &message)
@@ -174,7 +165,7 @@ void MainWindow::sendStopSignal(){
 
 void MainWindow::setupPlotsTab()
 {
-    for(list<Receiver*>::iterator r=sensors.begin();r!=sensors.end();r++){
+    for(auto r=sensors.begin();r!=sensors.end();r++){
         QwtPlot* plot = (*r)->getSignal()->getPlot();
         createXAxisLine(plot);
         ui->plotLayout->addWidget(plot);

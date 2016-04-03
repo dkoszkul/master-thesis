@@ -30,9 +30,9 @@ void Simulation::simulate()
     std::cout<<"simulate"<<std::endl;
     std::cout<<"In the simulation we have "<<this->obstacles.size()<<" obstacles and "<<this->receivers.size()<<" receivers"<<std::endl;
 
-    for(list<Receiver*>::iterator r=receivers.begin();r!=receivers.end();r++){
+    for(auto r=receivers.begin();r!=receivers.end();r++){
         (*r)->resetReceiver();
-        for(list<Obstacle*>::iterator o=obstacles.begin();o!=obstacles.end();o++){
+        for(auto o=obstacles.begin();o!=obstacles.end();o++){
 
             double emitterToObstacleDistance = emitter->getDistance((*o));
             double distance = emitterToObstacleDistance + (*r)->getDistance((*o));
@@ -63,7 +63,7 @@ void Simulation::simulate()
         }
         t = times.erase(t);
     }
-    for(list<Receiver*>::iterator r=receivers.begin();r!=receivers.end();r++){
+    for(auto r=receivers.begin();r!=receivers.end();r++){
         (*r)->setTimes((*r)->getCopyTimes()); //this step is important after computing the delays to recover the TOF
         cout<<(*r)->getTimes().size();
         list<double> delays = (*r)->getDelays();

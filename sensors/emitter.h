@@ -4,7 +4,7 @@
 #include <iostream>
 #include "object.h"
 
-class Emitter : public Object{
+class Emitter final : public Object{
 public:
     Emitter();
     Emitter(int positionX,int positionY,double angle);

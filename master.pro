@@ -16,27 +16,27 @@ LIBS+=-L/usr/local/qwt-6.1.2/lib -lqwt
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    emitter.cpp \
-    object.cpp \
-    receiver.cpp \
-    obstacle.cpp \
     paintwidget.cpp \
-    simulation.cpp \
     console/console.cpp \
     console/settingsdialog.cpp \
-    simulation/signal.cpp
+    simulation/signal.cpp \
+    simulation/simulation.cpp \
+    sensors/receiver.cpp \
+    sensors/obstacle.cpp \
+    sensors/emitter.cpp \
+    sensors/object.cpp
 
 HEADERS  += mainwindow.h \
-    emitter.h \
-    object.h \
-    receiver.h \
-    obstacle.h \
     paintwidget.h \
     constants.h \
-    simulation.h \
     console/console.h \
     console/settingsdialog.h \
-    simulation/signal.h
+    simulation/signal.h \
+    simulation/simulation.h \
+    sensors/receiver.h \
+    sensors/obstacle.h \
+    sensors/object.h \
+    sensors/emitter.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui

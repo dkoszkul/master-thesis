@@ -4,14 +4,23 @@
 #include <QtCore/QtGlobal>
 #include <QMainWindow>
 #include <QtSerialPort/QSerialPort>
-
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
-#include <qwt_point_data.h>
-#include "simulation.h"
+
 #include "console/console.h"
 #include "simulation/signal.h"
+#include "simulation/simulation.h"
+
+#include "paintwidget.h"
+#include "console/settingsdialog.h"
+
+#include <iostream>
+
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_plot_marker.h>
+#include <qwt_point_data.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -64,24 +73,6 @@ private:
     SettingsDialog *settings;
 
     void setupPlotsTab();
-};
-
-class FunctionData: public QwtSyntheticPointData
-{
-public:
-    FunctionData( double( *y )( double ) ):
-        QwtSyntheticPointData( 100 ),
-        d_y( y )
-    {
-    }
-
-    virtual double y( double x ) const
-    {
-        return d_y( x );
-    }
-
-private:
-    double( *d_y )( double );
 };
 
 #endif // MAINWINDOW_H

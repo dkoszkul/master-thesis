@@ -3,7 +3,7 @@
 #include <QtGui>
 #include <QWidget>
 
-#include "object.h"
+#include "sensors/object.h"
 
 class PaintWidget : public QWidget
 {

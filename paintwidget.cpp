@@ -13,11 +13,6 @@ void PaintWidget::paintEvent(QPaintEvent *event)
     drawReceivers(&painter);
     drawEmitter(&painter);
     drawObstacles(&painter);
-    /* painter.drawEllipse(50, 0, 10, 10);
-     painter.drawEllipse(50, 50, 10, 10);
-     painter.drawEllipse(50, 100, 10, 10);*/
-
-    // painter.drawEllipse(30, 40, 10, 30);
 
 }
 
