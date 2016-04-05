@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "paintwidget.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -40,6 +40,19 @@ MainWindow::MainWindow(QWidget *parent) :
     simulation->setEmitter(emitter);
     simulation->setReceivers(sensors);
     simulation->setObstacles(obstacles);
+
+     PaintWidget* widget = new PaintWidget();
+     for(list<Receiver*>::iterator it=sensors.begin();it!=sensors.end();it++){
+         widget->addReceiver((*it));
+     }
+
+     widget->addEmitter(emitter);
+
+     for(list<Obstacle*>::iterator it=obstacles.begin();it!=obstacles.end();it++){
+         widget->addObstacle((*it));
+     }
+
+     ui->gridLayout->addWidget(widget);
 
     initActionsConnections();
     /* plots */
