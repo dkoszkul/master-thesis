@@ -46,12 +46,12 @@ void Simulation::simulate()
 
     Receiver * referenceReceiver = receivers.front();
     list<double> times = referenceReceiver->getTimes();
-    for(list<double>::iterator t=times.begin();t!=times.end();t++){
+    for(auto t=times.begin();t!=times.end();t++){
         double time = (*t);
-        for(list<Receiver*>::iterator r=receivers.begin();r!=receivers.end();r++){
+        for(auto r=receivers.begin();r!=receivers.end();r++){
             list<double> rTimes = (*r)->getTimes();
             double maxDistanceBetweenSensorsInUs = ((referenceReceiver->getDistance((*r))/100)/SPEED_OF_SOUND)*pow(10,6);
-            for(list<double>::iterator tt=rTimes.begin();tt!=rTimes.end();tt++){
+            for(auto tt=rTimes.begin();tt!=rTimes.end();tt++){
                 double timeDelay =(*tt) - time;
                 if(abs(timeDelay) <= maxDistanceBetweenSensorsInUs){
                     (*r)->addDelay(timeDelay);
@@ -71,8 +71,53 @@ void Simulation::simulate()
             double v =(*t);
             std::cout<<" "<<v;
         }
-    cout<<endl;
+        cout<<endl;
     }
+
+    double minTime = 999999;
+    for(auto r=receivers.begin();r!=receivers.end();r++){
+        list<double> rTimes = (*r)->getTimes();
+        for(auto tt=rTimes.begin();tt!=rTimes.end();tt++){
+            if((*tt)<minTime){
+                minTime = (*tt);
+            }
+        }
+    }
+    for(auto r=receivers.begin();r!=receivers.end();r++){
+        list<double> rTimes = (*r)->getTimes();
+        for(auto tt=rTimes.begin();tt!=rTimes.end();tt++){
+                (*r)->getSignal()->addTime((*tt)- minTime);
+            std::cout<<(*tt)- minTime<<std::endl;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

@@ -24,13 +24,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->disconnectButton->setEnabled(false);
     ui->uartSettingsButton->setEnabled(true);
 
-
-
+    setCentralWidget(ui->centralWidget);
 
     list<Obstacle*> obstacles;
-    obstacles.push_back(new Obstacle(100,120,0));
-    obstacles.push_back(new Obstacle(120,150,0));
-    obstacles.push_back(new Obstacle(190,190,0));
+   // obstacles.push_back(new Obstacle(100,100,0));
+    obstacles.push_back(new Obstacle(100,130,0));
+   // obstacles.push_back(new Obstacle(100,150,0));
 
     sensors.push_back(new Receiver(20,100,0));
     sensors.push_back(new Receiver(20,130,0));

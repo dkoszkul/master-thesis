@@ -17,7 +17,7 @@
    <widget class="QTabWidget" name="tabWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>10</x>
       <y>0</y>
       <width>1031</width>
       <height>531</height>
@@ -86,7 +86,7 @@
         <x>19</x>
         <y>79</y>
         <width>981</width>
-        <height>311</height>
+        <height>401</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="consoleLayout"/>
@@ -169,10 +169,24 @@
         <x>10</x>
         <y>50</y>
         <width>1011</width>
-        <height>441</height>
+        <height>431</height>
        </rect>
       </property>
-      <layout class="QVBoxLayout" name="plotLayout"/>
+      <layout class="QVBoxLayout" name="plotLayout">
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="horizontalLayoutWidget_2">
       <property name="geometry">

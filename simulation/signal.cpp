@@ -12,9 +12,9 @@ Signal::Signal(QObject *parent) : QObject(parent)
     signalPlot->setPen( Qt::red );
     signalPlot->attach( plot );
 
-    times.push_back(0);
+   /* times.push_back(0);
     times.push_back(205);
-    times.push_back(319);
+    times.push_back(319);*/
 }
 
 Signal::~Signal()
