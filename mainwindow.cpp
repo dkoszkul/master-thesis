@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(ui->centralWidget);
 
     list<Obstacle*> obstacles;
-   // obstacles.push_back(new Obstacle(100,100,0));
+    obstacles.push_back(new Obstacle(100,100,0));
     obstacles.push_back(new Obstacle(100,130,0));
    // obstacles.push_back(new Obstacle(100,150,0));
 

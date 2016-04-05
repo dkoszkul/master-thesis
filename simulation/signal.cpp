@@ -11,10 +11,6 @@ Signal::Signal(QObject *parent) : QObject(parent)
     signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
     signalPlot->setPen( Qt::red );
     signalPlot->attach( plot );
-
-   /* times.push_back(0);
-    times.push_back(205);
-    times.push_back(319);*/
 }
 
 Signal::~Signal()
@@ -24,20 +20,17 @@ Signal::~Signal()
 
 void Signal::generateSignal()
 {
-    std::vector<double> result;
+    signalProbes.clear();
     std::vector<double> timePlot;
     double t = signalMin;
     while(t<signalMax){
-
         double signalValue = computeSignalValueInTime(t);
-        //std::cout<<"Time "<<t<<" value "<<signalValue<<std::endl;
-        result.push_back(signalValue);
+        signalProbes.push_back(signalValue);
         timePlot.push_back(t);
         t+=signalStep;
     }
 
-
-    signalPlot->setSamples(timePlot.data(),result.data(),result.size());
+    signalPlot->setSamples(timePlot.data(),signalProbes.data(),signalProbes.size());
     plot->replot();
 }
 

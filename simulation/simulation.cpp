@@ -74,6 +74,10 @@ void Simulation::simulate()
         cout<<endl;
     }
 
+    /*************************************************/
+    /* DRAWING PLOTS BASED ON TOF FROM EACH RECEIVER */
+    /*************************************************/
+
     double minTime = 999999;
     for(auto r=receivers.begin();r!=receivers.end();r++){
         list<double> rTimes = (*r)->getTimes();
@@ -86,13 +90,14 @@ void Simulation::simulate()
     for(auto r=receivers.begin();r!=receivers.end();r++){
         list<double> rTimes = (*r)->getTimes();
         for(auto tt=rTimes.begin();tt!=rTimes.end();tt++){
-                (*r)->getSignal()->addTime((*tt)- minTime);
-            std::cout<<(*tt)- minTime<<std::endl;
+            (*r)->getSignal()->addTime((*tt)- minTime);
         }
     }
 
 
-
+    for(int uS=0;uS<1500;uS++){
+        // iteration over all signals and find phase delays
+    }
 
 
 

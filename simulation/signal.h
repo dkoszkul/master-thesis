@@ -38,6 +38,7 @@ private:
     double signalMax = 1500;
     double signalStep = 1;
     std::list<double> times;
+    std::vector<double> signalProbes;
 
     QwtPlot* plot;
     QwtPlotCurve *signalPlot;
