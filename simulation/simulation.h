@@ -23,6 +23,7 @@ private:
     std::list<Obstacle*> obstacles;
 
     bool allReceiversHaveSignals(bool* signalTable, int size);
+    void detectZeroCrossings();
 
 public:
     explicit Simulation(QObject *parent = 0);
