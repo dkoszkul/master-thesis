@@ -109,12 +109,12 @@ bool Simulation::allReceiversHaveSignals(bool *signalTable, int size)
 
 void Simulation::detectZeroCrossings()
 {
-    // [1] method showSignals() computes
+    // [1] method showSignals() computes signal values in every time tick
     for(auto r=receivers.begin();r!=receivers.end();r++){
         (*r)->getSignal()->showSignals();
     }
 
-    // [2] initialize necessary
+    // [2] initialize necessary variables
     bool* hasSignal = new bool[receivers.size()];
     double* previousProbes = new double[receivers.size()];
     for(unsigned int i=0;i<receivers.size();i++){
@@ -123,9 +123,9 @@ void Simulation::detectZeroCrossings()
     }
     int receiverNumber;
     int signalProbesSize = receivers.front()->getSignal()->getSignalProbes().size();
-
     bool areReceiversHaveSignals = false;
 
+    // [3] compute zero crossings
     for(int uS=0;uS<signalProbesSize;uS++){
         // iteration over all signals and find phase delays
         receiverNumber=0;
@@ -142,9 +142,10 @@ void Simulation::detectZeroCrossings()
                 }else{
                     if(previousProbes[receiverNumber] < 0 && actualProbe > 0){
                         std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<std::endl;
-                    }else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){
-                        std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection +/- at "<<uS<<std::endl;
                     }
+                    /*else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){
+                        std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection +/- at "<<uS<<std::endl;
+                    }*/
                     previousProbes[receiverNumber] = actualProbe;
                 }
 
