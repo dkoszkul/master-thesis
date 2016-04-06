@@ -4,7 +4,7 @@ Signal::Signal(QObject *parent) : QObject(parent)
 {
     plot = new QwtPlot();
     plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
-    plot->setAxisScale( plot->yLeft, -1.5, 1.5 );
+    plot->setAxisScale( plot->yLeft, -1.8, 1.8 );
 
     signalPlot = new QwtPlotCurve( "signal" );
     signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
@@ -51,6 +51,11 @@ void Signal::addTime(double time)
 void Signal::showSignals()
 {
     generateSignal();
+}
+
+std::vector<double> Signal::getSignalProbes() const
+{
+    return signalProbes;
 }
 
 QwtPlot *Signal::getPlot() const

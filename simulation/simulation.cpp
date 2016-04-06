@@ -67,7 +67,7 @@ void Simulation::simulate()
         (*r)->setTimes((*r)->getCopyTimes()); //this step is important after computing the delays to recover the TOF
         cout<<(*r)->getTimes().size();
         list<double> delays = (*r)->getDelays();
-        for(list<double>::iterator t=delays.begin();t!=delays.end();t++){
+        for(auto t=delays.begin();t!=delays.end();t++){
             double v =(*t);
             std::cout<<" "<<v;
         }
@@ -94,12 +94,34 @@ void Simulation::simulate()
         }
     }
 
+    for(auto r=receivers.begin();r!=receivers.end();r++){
+        (*r)->getSignal()->showSignals();
+    }
 
-    for(int uS=0;uS<1500;uS++){
+    bool *hasSignal = new bool[receivers.size()];
+    for(int i=0;i<receivers.size();i++){
+        hasSignal[i]=false;
+    }
+    int receiverNumber;
+    int signalProbesSize = receivers.front()->getSignal()->getSignalProbes().size();
+    for(int uS=0;uS<signalProbesSize;uS++){
         // iteration over all signals and find phase delays
+        receiverNumber=0;
+        for(auto r=receivers.begin();r!=receivers.end();r++){
+            if((*r)->getSignal()->getSignalProbes().at(uS)!=0){
+                hasSignal[receiverNumber]=true;
+            }
+            receiverNumber++;
+            if(allReceiversHaveSignals(hasSignal,3)){
+                std::cout<<"Wszystkie maja sygnal!"<<std::endl;
+            }
+
+        }
+
     }
 
 
+    delete[] hasSignal;
 
 
 
@@ -123,7 +145,17 @@ void Simulation::simulate()
 
 
 
+}
 
+bool Simulation::allReceiversHaveSignals(bool *signalTable, int size)
+{
+    for(int i=0;i<size;i++){
+        if(signalTable[i] == false){
+            return false;
+        }
+    }
+
+    return true;
 }
 
 

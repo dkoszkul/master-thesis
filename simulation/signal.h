@@ -19,19 +19,16 @@ public:
     explicit Signal(QObject *parent = 0);
     ~Signal();
 
-
     void addTime(double time);
+    void clear();
+    void showSignals();
 
     void setSignalPlot(QwtPlotCurve *value);
     void setPlot(QwtPlot *value);
-    void clear();
 
+    std::vector<double> getSignalProbes() const;
     QwtPlotCurve *getSignalPlot() const;
-
     QwtPlot *getPlot() const;
-
-public:
-    void showSignals();
 
 private:
     double signalMin = 0;

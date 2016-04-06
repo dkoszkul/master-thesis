@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <list>
-
+#include <map>
 #include <QObject>
 
 #include "sensors/object.h"
@@ -21,6 +21,8 @@ private:
     Object* emitter;
     std::list<Receiver*> receivers;
     std::list<Obstacle*> obstacles;
+
+    bool allReceiversHaveSignals(bool* signalTable, int size);
 
 public:
     explicit Simulation(QObject *parent = 0);
