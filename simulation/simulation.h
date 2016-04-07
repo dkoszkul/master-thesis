@@ -24,6 +24,7 @@ private:
 
     bool allReceiversHaveSignals(bool* signalTable, int size);
     void detectZeroCrossings();
+    bool arePatternTheSame(int* pattern, int* previousPattern, int size);
 
 public:
     explicit Simulation(QObject *parent = 0);

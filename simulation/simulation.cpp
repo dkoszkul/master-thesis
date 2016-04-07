@@ -117,12 +117,14 @@ void Simulation::detectZeroCrossings()
     // [2] initialize necessary variables
     bool* hasSignal = new bool[receivers.size()];
     double* previousProbes = new double[receivers.size()];
+    int* previousReceiversPattern = new int[receivers.size()];
     int* receiversPattern = new int[receivers.size()];
     unsigned int receiversPatternIndex = 0;
     for(unsigned int i=0;i<receivers.size();i++){
         hasSignal[i]=false;
         previousProbes[i]=0;
         receiversPattern[i]=0;
+        previousReceiversPattern[i]=0;
     }
     int receiverNumber;
     int signalProbesSize = receivers.front()->getSignal()->getSignalProbes().size();
@@ -144,10 +146,11 @@ void Simulation::detectZeroCrossings()
                     areReceiversHaveSignals = true;
                 }
                 if(previousProbes[receiverNumber] < 0 && actualProbe > 0){
-                    std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<std::endl;
+                   // std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<std::endl;
                     receiversPattern[receiversPatternIndex++] = receiverNumber;
                     if(receiversPatternIndex == receivers.size()){
                         receiversPatternIndex = 0;
+
                     }
                 }
                 /* else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){
@@ -159,7 +162,13 @@ void Simulation::detectZeroCrossings()
             }
             receiverNumber++;
         }
-        if(areReceiversHaveSignals && receiversPatternIndex==0) std::cout<<"[TIME]"<<uS<<"-- "<<receiversPattern[0]<<" "<<receiversPattern[1]<<" "<<receiversPattern[2]<<std::endl;
+        if(areReceiversHaveSignals && receiversPatternIndex==0) {
+            if(!arePatternTheSame(receiversPattern,previousReceiversPattern, receivers.size())){
+                std::cout<<"Pattern changed!"<<std::endl;
+            }
+            memcpy(previousReceiversPattern, receiversPattern, sizeof(int)*receivers.size());
+            //std::cout<<"[TIME]"<<uS<<"-- "<<receiversPattern[0]<<" "<<receiversPattern[1]<<" "<<receiversPattern[2]<<std::endl;
+        }
     }
 
 
@@ -169,6 +178,17 @@ void Simulation::detectZeroCrossings()
     delete[] hasSignal;
     delete[] previousProbes;
     delete[] receiversPattern;
+    delete[] previousReceiversPattern;
+}
+
+bool Simulation::arePatternTheSame(int *pattern, int *previousPattern, int size)
+{
+    for(int index=0;index<size;index++){
+        if(pattern[index] != previousPattern[index]){
+            return false;
+        }
+    }
+    return true;
 }
 
 
