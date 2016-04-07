@@ -117,13 +117,17 @@ void Simulation::detectZeroCrossings()
     // [2] initialize necessary variables
     bool* hasSignal = new bool[receivers.size()];
     double* previousProbes = new double[receivers.size()];
+    int* receiversPattern = new int[receivers.size()];
+    unsigned int receiversPatternIndex = 0;
     for(unsigned int i=0;i<receivers.size();i++){
         hasSignal[i]=false;
         previousProbes[i]=0;
+        receiversPattern[i]=0;
     }
     int receiverNumber;
     int signalProbesSize = receivers.front()->getSignal()->getSignalProbes().size();
     bool areReceiversHaveSignals = false;
+
 
     // [3] compute zero crossings
     for(int uS=0;uS<signalProbesSize;uS++){
@@ -131,35 +135,40 @@ void Simulation::detectZeroCrossings()
         receiverNumber=0;
         for(auto r=receivers.begin();r!=receivers.end();r++){
             double actualProbe = (*r)->getSignal()->getSignalProbes().at(uS);
-            if(!areReceiversHaveSignals && actualProbe!=0){
+            if(!areReceiversHaveSignals && actualProbe!=0){ // [A]
                 hasSignal[receiverNumber]=true;
             }
 
-            if(allReceiversHaveSignals(hasSignal,3)){
-                if(!areReceiversHaveSignals){
-                    std::cout<<"Wszystkie maja sygnal!"<<std::endl;
+            if(allReceiversHaveSignals(hasSignal,receivers.size())){
+                if(!areReceiversHaveSignals){ //dezactivate [A]
                     areReceiversHaveSignals = true;
-                }else{
-                    if(previousProbes[receiverNumber] < 0 && actualProbe > 0){
-                        std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<std::endl;
-                    }
-                    /*else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){
-                        std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection +/- at "<<uS<<std::endl;
-                    }*/
-                    previousProbes[receiverNumber] = actualProbe;
                 }
+                if(previousProbes[receiverNumber] < 0 && actualProbe > 0){
+                    std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<std::endl;
+                    receiversPattern[receiversPatternIndex++] = receiverNumber;
+                    if(receiversPatternIndex == receivers.size()){
+                        receiversPatternIndex = 0;
+                    }
+                }
+                /* else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){
+                    std::cout<<"---"<<std::endl;
+                }*/
+                previousProbes[receiverNumber] = actualProbe;
+
 
             }
             receiverNumber++;
         }
-
+        if(areReceiversHaveSignals && receiversPatternIndex==0) std::cout<<"[TIME]"<<uS<<"-- "<<receiversPattern[0]<<" "<<receiversPattern[1]<<" "<<receiversPattern[2]<<std::endl;
     }
 
 
     /**********************************/
     /* CLEAR ALL POINTERS             */
     /**********************************/
-    delete[] hasSignal, previousProbes;
+    delete[] hasSignal;
+    delete[] previousProbes;
+    delete[] receiversPattern;
 }
 
 
