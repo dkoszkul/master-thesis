@@ -8,6 +8,8 @@ using namespace std;
 
 class Receiver final : public Object{
 private:
+    int receiverNumber;
+
     list<double> times;
     list<double> copyTimes;
     list<double> delays;
@@ -16,7 +18,7 @@ private:
 
 public:
     Receiver();
-    Receiver(int positionX,int positionY,double angle);
+    Receiver(int receiverNumber, int positionX,int positionY,double angle);
     ~Receiver();
 
     void resetReceiver();
@@ -30,6 +32,8 @@ public:
 
     Signal *getSignal() const;
     void setSignal(Signal *value);
+    int getReceiverNumber() const;
+    void setReceiverNumber(int value);
 };
 
 #endif // RECEIVER_H

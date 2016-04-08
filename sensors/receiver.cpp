@@ -1,11 +1,22 @@
 #include "receiver.h"
 
+int Receiver::getReceiverNumber() const
+{
+    return receiverNumber;
+}
+
+void Receiver::setReceiverNumber(int value)
+{
+    receiverNumber = value;
+}
+
 Receiver::Receiver()
 {
     signal = new Signal();
 }
 
-Receiver::Receiver(int positionX, int positionY, double angle) : Object(positionX,positionY,angle){
+Receiver::Receiver(int receiverNumber, int positionX, int positionY, double angle) : Object(positionX,positionY,angle){
+    this->receiverNumber = receiverNumber;
     signal = new Signal();
 }
 

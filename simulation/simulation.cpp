@@ -131,6 +131,8 @@ void Simulation::detectZeroCrossings()
     bool areReceiversHaveSignals = false;
     bool isPatternChanged = false;
 
+    int referenceReceiver = 0;
+    bool doMeasurement = false;
 
     // [3] compute zero crossings
     for(int uS=0;uS<signalProbesSize;uS++){
@@ -146,14 +148,20 @@ void Simulation::detectZeroCrossings()
                 if(!areReceiversHaveSignals){ //dezactivate [A]
                     areReceiversHaveSignals = true;
                 }
+                if((*r)->getReceiverNumber() == referenceReceiver){ //tu rozgrzebane
+                    doMeasurement = true;
+                }
                 if(previousProbes[receiverNumber] < 0 && actualProbe > 0){
-                    if(isPatternChanged){
+
+                    if(isPatternChanged && doMeasurement){
                         std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<std::endl;
+
                     }
                     receiversPattern[receiversPatternIndex++] = receiverNumber;
                     if(receiversPatternIndex == receivers.size()){
                         receiversPatternIndex = 0;
                         isPatternChanged = false;
+                        doMeasurement = false;
                     }
                 }
                 /* else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){

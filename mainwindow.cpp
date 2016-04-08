@@ -29,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     list<Obstacle*> obstacles;
     obstacles.push_back(new Obstacle(100,100,0));
     obstacles.push_back(new Obstacle(100,130,0));
-   // obstacles.push_back(new Obstacle(100,150,0));
+    // obstacles.push_back(new Obstacle(100,150,0));
 
-    sensors.push_back(new Receiver(20,100,0));
-    sensors.push_back(new Receiver(20,130,0));
-    sensors.push_back(new Receiver(20,160,0));
+    sensors.push_back(new Receiver(0,20,100,0));
+    sensors.push_back(new Receiver(1,20,130,0));
+    sensors.push_back(new Receiver(2,20,160,0));
 
     Emitter* emitter = new Emitter(0,125,0);
 
@@ -41,18 +41,18 @@ MainWindow::MainWindow(QWidget *parent) :
     simulation->setReceivers(sensors);
     simulation->setObstacles(obstacles);
 
-     PaintWidget* widget = new PaintWidget();
-     for(list<Receiver*>::iterator it=sensors.begin();it!=sensors.end();it++){
-         widget->addReceiver((*it));
-     }
+    PaintWidget* widget = new PaintWidget();
+    for(list<Receiver*>::iterator it=sensors.begin();it!=sensors.end();it++){
+        widget->addReceiver((*it));
+    }
 
-     widget->addEmitter(emitter);
+    widget->addEmitter(emitter);
 
-     for(list<Obstacle*>::iterator it=obstacles.begin();it!=obstacles.end();it++){
-         widget->addObstacle((*it));
-     }
+    for(list<Obstacle*>::iterator it=obstacles.begin();it!=obstacles.end();it++){
+        widget->addObstacle((*it));
+    }
 
-     ui->gridLayout->addWidget(widget);
+    ui->gridLayout->addWidget(widget);
 
     initActionsConnections();
     /* plots */
