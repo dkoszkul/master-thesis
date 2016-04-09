@@ -132,7 +132,9 @@ void Simulation::detectZeroCrossings()
     bool isPatternChanged = false;
 
     int referenceReceiver = 0;
+    int referenceReceiverZeroCrossTime = 0;
     bool doMeasurement = false;
+    int receiverNumberToMeasure = referenceReceiver;
 
     // [3] compute zero crossings
     for(int uS=0;uS<signalProbesSize;uS++){
@@ -145,24 +147,39 @@ void Simulation::detectZeroCrossings()
             }
 
             if(allReceiversHaveSignals(hasSignal,receivers.size())){
+                // [.] all receivers receive signal
                 if(!areReceiversHaveSignals){ //dezactivate [A]
                     areReceiversHaveSignals = true;
                 }
-                if((*r)->getReceiverNumber() == referenceReceiver){ //tu rozgrzebane
-                    doMeasurement = true;
-                }
+                // [.] always detect zero-crossing in signal
                 if(previousProbes[receiverNumber] < 0 && actualProbe > 0){
-
-                    if(isPatternChanged && doMeasurement){
-                        std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<std::endl;
+                    // [.] raise doMeasurement flag if zero-crossing belongs to the reference signal
+                    if((*r)->getReceiverNumber() == referenceReceiver && receiverNumberToMeasure == 0){
+                        doMeasurement = true;
+                        receiverNumberToMeasure = referenceReceiver;
+                        referenceReceiverZeroCrossTime = uS;
+                        receiversPatternIndex = 0;
+                    }
+                    // [.] measure the time if doMeasurement flag is raised
+                    if(doMeasurement && (*r)->getReceiverNumber() == receiverNumberToMeasure){
+                        std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<" delta T: "<<(uS-referenceReceiverZeroCrossTime) <<std::endl;
+                        deltaTByReceiverNumber[receiverNumber].push_back(uS-referenceReceiverZeroCrossTime);
+                        timeByReceiverNumber[receiverNumber].push_back(uS);
+                        receiverNumberToMeasure++;
+                        if(receiverNumberToMeasure == receivers.size()) {
+                            std::cout<<"-------"<<std::endl;
+                            receiverNumberToMeasure = 0;
+                        }
 
                     }
-                    receiversPattern[receiversPatternIndex++] = receiverNumber;
-                    if(receiversPatternIndex == receivers.size()){
-                        receiversPatternIndex = 0;
+
+                    //receiversPattern[receiversPatternIndex++] = receiverNumber;
+                  /*  if(receiversPatternIndex == receivers.size()){
+                        std::cout<<"------"<<std::endl;
+                       // receiversPatternIndex = 0;
                         isPatternChanged = false;
                         doMeasurement = false;
-                    }
+                    }*/
                 }
                 /* else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){
                     std::cout<<"---"<<std::endl;
@@ -170,6 +187,9 @@ void Simulation::detectZeroCrossings()
                 previousProbes[receiverNumber] = actualProbe;
 
 
+            }else{
+                deltaTByReceiverNumber[receiverNumber].push_back(0);
+                timeByReceiverNumber[receiverNumber].push_back(uS);
             }
             receiverNumber++;
         }
@@ -184,6 +204,17 @@ void Simulation::detectZeroCrossings()
         }
     }
 
+    std::cout<<deltaTByReceiverNumber[0].size()<<" "<<deltaTByReceiverNumber[1].size()<<" "<<deltaTByReceiverNumber[2].size()<<std::endl;
+    for(int i=0;i<receivers.size();i++){
+        QwtPlotCurve* signalPlot = new QwtPlotCurve( "delta T" );
+        signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+        signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+        signalPlot->setPen( Qt::red );
+        signalPlot->attach( plot );
+        signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
+
+    }
+    plot->replot();
 
     /**********************************/
     /* CLEAR ALL POINTERS             */
@@ -205,3 +236,13 @@ bool Simulation::arePatternTheSame(int *pattern, int *previousPattern, int size)
 }
 
 
+
+std::map<int, std::vector<double> > Simulation::getDeltaTByReceiverNumber() const
+{
+    return deltaTByReceiverNumber;
+}
+
+void Simulation::setPlot(QwtPlot *value)
+{
+    plot = value;
+}

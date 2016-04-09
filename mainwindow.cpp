@@ -57,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
     initActionsConnections();
     /* plots */
     setupPlotsTab();
+    setupDeltaTTab();
 }
 
 MainWindow::~MainWindow()
@@ -185,6 +186,20 @@ void MainWindow::setupPlotsTab()
 
 }
 
+
+void MainWindow::setupDeltaTTab()
+{
+   QwtPlot* plot = new QwtPlot();
+   plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+   plot->setAxisScale( plot->yLeft, -1.0, 50);
+   plot->setAxisTitle(plot->xBottom,"time [uS]");
+   plot->setAxisTitle(plot->yLeft,"delta_t [uS]");
+   ui->delta_T->addWidget(plot);
+
+   simulation->setPlot(plot);
+
+
+}
 void MainWindow::createXAxisLine(QwtPlot* plot)
 {
     QwtPlotMarker *mY = new QwtPlotMarker();

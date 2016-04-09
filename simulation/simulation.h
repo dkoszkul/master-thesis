@@ -22,6 +22,10 @@ private:
     std::list<Receiver*> receivers;
     std::list<Obstacle*> obstacles;
 
+    QwtPlot* plot;
+    std::map<int,std::vector<double>> deltaTByReceiverNumber;
+    std::map<int,std::vector<double>> timeByReceiverNumber;
+
     bool allReceiversHaveSignals(bool* signalTable, int size);
     void detectZeroCrossings();
     bool arePatternTheSame(int* pattern, int* previousPattern, int size);
@@ -32,6 +36,9 @@ public:
     void setEmitter(Object* emitter);
     void setReceivers(const std::list<Receiver*> &receivers);
     void setObstacles(const std::list<Obstacle*> &obstacles);
+
+    std::map<int, std::vector<double> > getDeltaTByReceiverNumber() const;
+    void setPlot(QwtPlot *value);
 
 public slots:
     void simulate();

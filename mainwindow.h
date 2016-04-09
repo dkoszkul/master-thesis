@@ -73,6 +73,7 @@ private:
     SettingsDialog *settings;
 
     void setupPlotsTab();
+    void setupDeltaTTab();
 };
 
 #endif // MAINWINDOW_H
