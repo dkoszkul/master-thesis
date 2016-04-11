@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
     console->setEnabled(false);
     // console->setMaximumHeight(100);
     ui->consoleLayout->addWidget(console);
-
     serial = new QSerialPort(this);
     status = new QLabel;
     settings = new SettingsDialog;
@@ -24,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->disconnectButton->setEnabled(false);
     ui->uartSettingsButton->setEnabled(true);
 
-    setCentralWidget(ui->centralWidget);
+    setCentralWidget(ui->tabWidget);
 
     list<Obstacle*> obstacles;
     obstacles.push_back(new Obstacle(100,100,0));
