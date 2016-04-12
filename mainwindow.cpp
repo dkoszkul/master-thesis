@@ -163,14 +163,14 @@ void MainWindow::showStatusMessage(const QString &message)
 void MainWindow::sendStartSignal(){
     std::cout<<"start"<<std::endl;
     //  if (serial->open(QIODevice::ReadWrite)) {
-    console->putData("start\r\n");
+    writeData("start\r\n");
     // }
 }
 
 void MainWindow::sendStopSignal(){
     std::cout<<"stop"<<std::endl;
     // if (serial->open(QIODevice::ReadWrite)) {
-    console->putData("stop\r\n");
+    writeData("stop\r\n");
     // }
 
 }
