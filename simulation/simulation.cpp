@@ -35,11 +35,12 @@ void Simulation::simulate()
         for(auto o=obstacles.begin();o!=obstacles.end();o++){
 
             double emitterToObstacleDistance = emitter->getDistance((*o));
-            double distance = emitterToObstacleDistance + (*r)->getDistance((*o));
-            double time = ((distance/100)/SPEED_OF_SOUND)*pow(10,6);
-            (*r)->addTime(time);
+            double distanceInMilimeters = emitterToObstacleDistance + (*r)->getDistance((*o));
+            double distanceinMeters = distanceInMilimeters/1000;
+            double timeInMicroseconds = (distanceinMeters/SPEED_OF_SOUND)*pow(10,6);
+            (*r)->addTime(timeInMicroseconds);
             std::cout<<"Distance between emitter to receiver ["<<(*r)->getPositionX()<<","<<(*r)->getPositionY()<<"] through obstacle ["<<(*o)->getPositionX()<<","<<(*o)->getPositionY();
-            std::cout<<"] is equal to "<<distance<<", TOF = "<<time<<"[us]"<<std::endl;
+            std::cout<<"] is equal to "<<distanceInMilimeters<<"[mm], TOF = "<<timeInMicroseconds<<"[us]"<<std::endl;
         }
         std::cout<<"-------------------"<<std::endl;
     }
@@ -50,7 +51,7 @@ void Simulation::simulate()
         double time = (*t);
         for(auto r=receivers.begin();r!=receivers.end();r++){
             list<double> rTimes = (*r)->getTimes();
-            double maxDistanceBetweenSensorsInUs = ((referenceReceiver->getDistance((*r))/100)/SPEED_OF_SOUND)*pow(10,6);
+            double maxDistanceBetweenSensorsInUs = ((referenceReceiver->getDistance((*r))/1000)/SPEED_OF_SOUND)*pow(10,6);
             for(auto tt=rTimes.begin();tt!=rTimes.end();tt++){
                 double timeDelay =(*tt) - time;
                 if(abs(timeDelay) <= maxDistanceBetweenSensorsInUs){
@@ -162,28 +163,16 @@ void Simulation::detectZeroCrossings()
                     }
                     // [.] measure the time if doMeasurement flag is raised
                     if(doMeasurement && (*r)->getReceiverNumber() == receiverNumberToMeasure){
-                        std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<" delta T: "<<(uS-referenceReceiverZeroCrossTime) <<std::endl;
+                        // std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<" delta T: "<<(uS-referenceReceiverZeroCrossTime) <<std::endl;
                         deltaTByReceiverNumber[receiverNumber].push_back(uS-referenceReceiverZeroCrossTime);
                         timeByReceiverNumber[receiverNumber].push_back(uS);
                         receiverNumberToMeasure++;
                         if(receiverNumberToMeasure == receivers.size()) {
-                            std::cout<<"-------"<<std::endl;
                             receiverNumberToMeasure = 0;
                         }
-
                     }
-
-                    //receiversPattern[receiversPatternIndex++] = receiverNumber;
-                  /*  if(receiversPatternIndex == receivers.size()){
-                        std::cout<<"------"<<std::endl;
-                       // receiversPatternIndex = 0;
-                        isPatternChanged = false;
-                        doMeasurement = false;
-                    }*/
                 }
-                /* else if(previousProbes[receiverNumber] > 0 && actualProbe < 0){
-                    std::cout<<"---"<<std::endl;
-                }*/
+
                 previousProbes[receiverNumber] = actualProbe;
 
 
@@ -212,6 +201,28 @@ void Simulation::detectZeroCrossings()
         signalPlot->setPen( Qt::red );
         signalPlot->attach( plot );
         signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
+
+        QString filename = "Data";
+       // filename.append(new QString(std::to_string(i).c_str()));
+        filename.append(".txt");
+        QFile file(filename);
+        if (file.open(QIODevice::Append)) {
+            QTextStream stream(&file);
+            stream <<endl<< "time";
+            stream<<std::to_string(i).c_str();
+            stream<<"=[";
+            for(auto it = timeByReceiverNumber[i].begin(); it != timeByReceiverNumber[i].end(); ++it) {
+               stream<<" "<<(*it);
+            }
+            stream<<"];"<<endl;
+            stream << "values";
+            stream<<std::to_string(i).c_str();
+            stream<<"=[";
+            for(auto it = deltaTByReceiverNumber[i].begin(); it != deltaTByReceiverNumber[i].end(); ++it) {
+               stream<<" "<<(*it);
+            }
+            stream<<"];"<<endl;
+        }
 
     }
     plot->replot();

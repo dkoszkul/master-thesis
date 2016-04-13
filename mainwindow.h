@@ -21,6 +21,8 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 #include <qwt_point_data.h>
+#include <QPixmap>
+#include <QImage>
 
 QT_BEGIN_NAMESPACE
 
@@ -74,6 +76,8 @@ private:
 
     void setupPlotsTab();
     void setupDeltaTTab();
+
+    QwtPlot* plot;
 };
 
 #endif // MAINWINDOW_H

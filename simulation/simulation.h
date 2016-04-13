@@ -5,6 +5,8 @@
 #include <list>
 #include <map>
 #include <QObject>
+#include <QString>
+#include <QFile>
 
 #include "sensors/object.h"
 #include "sensors/emitter.h"

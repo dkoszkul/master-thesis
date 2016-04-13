@@ -1,5 +1,8 @@
 #include "signal.h"
 
+#include <QString>
+#include<QFile>
+
 Signal::Signal(QObject *parent) : QObject(parent)
 {
     plot = new QwtPlot();
@@ -32,6 +35,23 @@ void Signal::generateSignal()
 
     signalPlot->setSamples(timePlot.data(),signalProbes.data(),signalProbes.size());
     plot->replot();
+
+    QString filename = "Plot";
+    filename.append(".txt");
+    QFile file(filename);
+    if (file.open(QIODevice::Append)) {
+        QTextStream stream(&file);
+        stream <<endl<< "time=[";
+        for(auto it = timePlot.begin(); it != timePlot.end(); ++it) {
+           stream<<" "<<(*it);
+        }
+        stream<<"];"<<endl;
+        stream << "values=[";
+        for(auto it = signalProbes.begin(); it != signalProbes.end(); ++it) {
+           stream<<" "<<(*it);
+        }
+        stream<<"];"<<endl;
+    }
 }
 
 double Signal::computeSignalValueInTime(double actualTime){

@@ -27,8 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     list<Obstacle*> obstacles;
     obstacles.push_back(new Obstacle(100,100,0));
-    obstacles.push_back(new Obstacle(100,130,0));
-    // obstacles.push_back(new Obstacle(100,150,0));
+    obstacles.push_back(new Obstacle(120,120,0));
+    obstacles.push_back(new Obstacle(100,140,0));
 
     sensors.push_back(new Receiver(0,20,100,0));
     sensors.push_back(new Receiver(1,20,130,0));
@@ -41,13 +41,13 @@ MainWindow::MainWindow(QWidget *parent) :
     simulation->setObstacles(obstacles);
 
     PaintWidget* widget = new PaintWidget();
-    for(list<Receiver*>::iterator it=sensors.begin();it!=sensors.end();it++){
+    for(auto it=sensors.begin();it!=sensors.end();it++){
         widget->addReceiver((*it));
     }
 
     widget->addEmitter(emitter);
 
-    for(list<Obstacle*>::iterator it=obstacles.begin();it!=obstacles.end();it++){
+    for(auto it=obstacles.begin();it!=obstacles.end();it++){
         widget->addObstacle((*it));
     }
 
@@ -135,6 +135,7 @@ void MainWindow::showSignals()
     }
 }
 
+
 void MainWindow::initActionsConnections()
 {
     connect(ui->pushButton, &QPushButton::clicked, simulation, &Simulation::simulate);
@@ -161,23 +162,22 @@ void MainWindow::showStatusMessage(const QString &message)
 }
 
 void MainWindow::sendStartSignal(){
-    std::cout<<"start"<<std::endl;
-    //  if (serial->open(QIODevice::ReadWrite)) {
-    writeData("start\r\n");
-    // }
+    if (serial->open(QIODevice::ReadWrite)) {
+        writeData("start\r\n");
+    }
 }
 
 void MainWindow::sendStopSignal(){
-    std::cout<<"stop"<<std::endl;
-    // if (serial->open(QIODevice::ReadWrite)) {
-    writeData("stop\r\n");
-    // }
+    if (serial->open(QIODevice::ReadWrite)) {
+        writeData("stop\r\n");
+    }
 
 }
 
 void MainWindow::setupPlotsTab()
 {
     for(auto r=sensors.begin();r!=sensors.end();r++){
+        std::cout<<(*r)->getReceiverNumber()<<std::endl;
         QwtPlot* plot = (*r)->getSignal()->getPlot();
         createXAxisLine(plot);
         ui->plotLayout->addWidget(plot);
@@ -188,14 +188,14 @@ void MainWindow::setupPlotsTab()
 
 void MainWindow::setupDeltaTTab()
 {
-   QwtPlot* plot = new QwtPlot();
-   plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
-   plot->setAxisScale( plot->yLeft, -1.0, 50);
-   plot->setAxisTitle(plot->xBottom,"time [uS]");
-   plot->setAxisTitle(plot->yLeft,"delta_t [uS]");
-   ui->delta_T->addWidget(plot);
+    plot = new QwtPlot();
+    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    plot->setAxisScale( plot->yLeft, -1.0, 50);
+    plot->setAxisTitle(plot->xBottom,"time [uS]");
+    plot->setAxisTitle(plot->yLeft,"Δt [uS]");
+    ui->delta_T->addWidget(plot);
 
-   simulation->setPlot(plot);
+    simulation->setPlot(plot);
 
 
 }
