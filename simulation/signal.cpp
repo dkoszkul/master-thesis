@@ -1,7 +1,7 @@
 #include "signal.h"
 
 #include <QString>
-#include<QFile>
+#include <QFile>
 
 Signal::Signal(QObject *parent) : QObject(parent)
 {

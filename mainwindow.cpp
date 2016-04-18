@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     serial = new QSerialPort(this);
     status = new QLabel;
     settings = new SettingsDialog;
+    matlabExporter = new MatlabExporter;
 
     //ui->statusBar->addWidget(status);
     ui->connectButton->setEnabled(true);
@@ -26,15 +27,20 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(ui->tabWidget);
 
     list<Obstacle*> obstacles;
-    obstacles.push_back(new Obstacle(100,100,0));
-    obstacles.push_back(new Obstacle(120,120,0));
-    obstacles.push_back(new Obstacle(100,140,0));
+    obstacles.push_back(new Obstacle(120,100,0));
+    obstacles.push_back(new Obstacle(120,111,0));
+    //obstacles.push_back(new Obstacle(100,140,0));
+    matlabExporter->setObstacles(obstacles);
 
     sensors.push_back(new Receiver(0,20,100,0));
-    sensors.push_back(new Receiver(1,20,130,0));
-    sensors.push_back(new Receiver(2,20,160,0));
+    sensors.push_back(new Receiver(1,20,114,0)); //11mm
+    sensors.push_back(new Receiver(2,20,135,0)); //4mm
 
-    Emitter* emitter = new Emitter(0,125,0);
+    matlabExporter->setReceivers(sensors);
+
+    Emitter* emitter = new Emitter(0,114,0);
+
+    matlabExporter->setEmitter(emitter);
 
     simulation->setEmitter(emitter);
     simulation->setReceivers(sensors);
@@ -154,6 +160,7 @@ void MainWindow::initActionsConnections()
 
     /* connections for plot tab */
     connect(ui->plotsSignalsButton,&QPushButton::clicked, this, &MainWindow::showSignals);
+    connect(ui->exportResults,&QPushButton::clicked, matlabExporter, &MatlabExporter::exportResults);
 }
 
 void MainWindow::showStatusMessage(const QString &message)

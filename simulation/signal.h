@@ -2,11 +2,11 @@
 #define SIGNAL_H
 
 #include <iostream>
-#include<list>
-#include<vector>
+#include <list>
+#include <vector>
 #include <QObject>
 #include <QVBoxLayout>
-#include<cmath>
+#include <cmath>
 #include "constants.h"
 
 #include <qwt_plot.h>

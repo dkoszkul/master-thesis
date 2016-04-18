@@ -14,6 +14,7 @@
 
 #include "paintwidget.h"
 #include "console/settingsdialog.h"
+#include "matlab/matlabexporter.h"
 
 #include <iostream>
 
@@ -73,6 +74,7 @@ private:
     Console *console;
     QSerialPort *serial;
     SettingsDialog *settings;
+    MatlabExporter *matlabExporter;
 
     void setupPlotsTab();
     void setupDeltaTTab();

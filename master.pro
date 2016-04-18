@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     sensors/receiver.cpp \
     sensors/obstacle.cpp \
     sensors/emitter.cpp \
-    sensors/object.cpp
+    sensors/object.cpp \
+    matlab/matlabexporter.cpp
 
 HEADERS  += mainwindow.h \
     paintwidget.h \
@@ -36,7 +37,8 @@ HEADERS  += mainwindow.h \
     sensors/receiver.h \
     sensors/obstacle.h \
     sensors/object.h \
-    sensors/emitter.h
+    sensors/emitter.h \
+    matlab/matlabexporter.h
 
 FORMS    += mainwindow.ui \
     settingsdialog.ui
