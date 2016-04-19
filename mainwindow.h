@@ -80,6 +80,7 @@ private:
     void setupDeltaTTab();
 
     QwtPlot* plot;
+    void createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter);
 };
 
 #endif // MAINWINDOW_H

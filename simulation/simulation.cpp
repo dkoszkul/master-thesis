@@ -262,3 +262,18 @@ void Simulation::setPlot(QwtPlot *value)
 }
 
 
+
+std::list<Obstacle *> Simulation::getObstacles() const
+{
+    return obstacles;
+}
+
+std::list<Receiver *> Simulation::getReceivers() const
+{
+    return receivers;
+}
+
+Object *Simulation::getEmitter() const
+{
+    return emitter;
+}

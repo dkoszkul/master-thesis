@@ -1,6 +1,22 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "paintwidget.h"
+void MainWindow::createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter)
+{
+    PaintWidget* widget = new PaintWidget;
+    for(auto it=sensors.begin();it!=sensors.end();it++){
+        widget->addReceiver((*it));
+    }
+
+    widget->addEmitter(emitter);
+
+    for(auto it=obstacles.begin();it!=obstacles.end();it++){
+        widget->addObstacle((*it));
+    }
+
+    ui->gridLayout->addWidget(widget);
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -18,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent) :
     status = new QLabel;
     settings = new SettingsDialog;
     matlabExporter = new MatlabExporter;
-    matlabExporter->setSimulation(simulation);
 
     //ui->statusBar->addWidget(status);
     ui->connectButton->setEnabled(true);
@@ -29,36 +44,23 @@ MainWindow::MainWindow(QWidget *parent) :
 
     list<Obstacle*> obstacles;
     obstacles.push_back(new Obstacle(120,100,0));
-    obstacles.push_back(new Obstacle(120,111,0));
+    //obstacles.push_back(new Obstacle(120,121,0));
     //obstacles.push_back(new Obstacle(100,140,0));
-    matlabExporter->setObstacles(obstacles);
 
     sensors.push_back(new Receiver(0,20,100,0));
-    sensors.push_back(new Receiver(1,20,114,0)); //11mm
-    sensors.push_back(new Receiver(2,20,135,0)); //4mm
+    sensors.push_back(new Receiver(1,20,111,0)); //11mm
+    sensors.push_back(new Receiver(2,10,115,0)); //4mm
 
-    matlabExporter->setReceivers(sensors);
 
-    Emitter* emitter = new Emitter(0,114,0);
-
-    matlabExporter->setEmitter(emitter);
+    Emitter* emitter = new Emitter(5,100,0);
 
     simulation->setEmitter(emitter);
     simulation->setReceivers(sensors);
     simulation->setObstacles(obstacles);
 
-    PaintWidget* widget = new PaintWidget();
-    for(auto it=sensors.begin();it!=sensors.end();it++){
-        widget->addReceiver((*it));
-    }
+    matlabExporter->setSimulation(simulation);
 
-    widget->addEmitter(emitter);
-
-    for(auto it=obstacles.begin();it!=obstacles.end();it++){
-        widget->addObstacle((*it));
-    }
-
-    ui->gridLayout->addWidget(widget);
+    createPaintWidget(obstacles, emitter);
 
     initActionsConnections();
     /* plots */

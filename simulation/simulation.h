@@ -20,9 +20,9 @@ class Simulation : public QObject
 {
     Q_OBJECT
 private:
-    Object* emitter;
-    std::list<Receiver*> receivers;
-    std::list<Obstacle*> obstacles;
+    Object *emitter;
+    std::list<Receiver *> receivers;
+    std::list<Obstacle *> obstacles;
 
     QwtPlot* plot;
     std::map<int,std::vector<double>> deltaTByReceiverNumber;
@@ -44,7 +44,9 @@ public:
 
     void setPlot(QwtPlot *value);
 
-
+    std::list<Obstacle *> getObstacles() const;
+    std::list<Receiver *> getReceivers() const;
+    Object *getEmitter() const;
 
 public slots:
     void simulate();

@@ -14,7 +14,9 @@ void MatlabExporter::exportResults(){
 
     QString filename;
     filename.append(filePath.c_str());
-    filename.append("/result.txt");
+    filename.append("/result_");
+    filename.append(std::to_string(QDateTime::currentMSecsSinceEpoch()).c_str());
+    filename.append(".m");
     QFile file(filename);
     if (file.open(QIODevice::ReadWrite)) {
         QTextStream stream(&file);
@@ -23,12 +25,17 @@ void MatlabExporter::exportResults(){
         stream<<"hold on;"<<endl;
         stream<<"axis equal;"<<endl;
         stream<<endl<<"% Receivers positions"<<endl;
+        std::list<Receiver *> receivers = simulation->getReceivers();
         for(auto receiver = receivers.begin(); receiver != receivers.end();receiver++){
-            stream<<"circle("<<(*receiver)->getPositionX()<<","<<(*receiver)->getPositionY()<<",5);"<<endl;
+            stream<<"circle("<<(*receiver)->getPositionX()<<","<<(*receiver)->getPositionY()<<",5,'b');"<<endl;
         }
+
         stream<<endl<<"% Emitter position"<<endl;
+        Object *emitter = simulation->getEmitter();
         stream<<"plot("<<emitter->getPositionX()<<","<<emitter->getPositionY()<<",'ko','MarkerSize',30);"<<endl;
+
         stream<<endl<<"% Obstacle positions"<<endl;
+        std::list<Obstacle *> obstacles = simulation->getObstacles();
         for(auto obstacle = obstacles.begin(); obstacle != obstacles.end();obstacle++){
             stream<<"plot("<<(*obstacle)->getPositionX()<<","<<(*obstacle)->getPositionY()<<",'x','MarkerSize',18);"<<endl;
         }
@@ -91,19 +98,4 @@ void MatlabExporter::exportResults(){
 void MatlabExporter::setSimulation(Simulation *value)
 {
     simulation = value;
-}
-
-void MatlabExporter::setObstacles(const std::list<Obstacle *> &value)
-{
-    obstacles = value;
-}
-
-void MatlabExporter::setEmitter(Emitter *value)
-{
-    emitter = value;
-}
-
-void MatlabExporter::setReceivers(const std::list<Receiver *> &value)
-{
-    receivers = value;
 }

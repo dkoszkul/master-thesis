@@ -5,6 +5,7 @@
 #include <QString>
 #include <QFile>
 #include <QTextStream>
+#include <QDateTime>
 
 #include <iostream>
 #include <sstream>
@@ -24,8 +25,6 @@ public:
     explicit MatlabExporter(QObject *parent = 0);
 
     void setFilePath(const std::string &value);
-    void setReceivers(const std::list<Receiver *> &value);
-    void setEmitter(Emitter *value);
     void setObstacles(const std::list<Obstacle *> &value);
     void setSimulation(Simulation *value);
 
@@ -34,9 +33,6 @@ public slots:
 
 private:
     std::string filePath;
-    std::list<Receiver*> receivers;
-    Emitter* emitter;
-    std::list<Obstacle*> obstacles;
     Simulation* simulation;
 
 };
