@@ -23,17 +23,18 @@ Signal::~Signal()
 
 void Signal::generateSignal()
 {
-    signalProbes.clear();
-    std::vector<double> timePlot;
+    signalY.clear();
+    signalX.clear();
+
     double t = signalMin;
     while(t<signalMax){
         double signalValue = computeSignalValueInTime(t);
-        signalProbes.push_back(signalValue);
-        timePlot.push_back(t);
+        signalY.push_back(signalValue);
+        signalX.push_back(t);
         t+=signalStep;
     }
 
-    signalPlot->setSamples(timePlot.data(),signalProbes.data(),signalProbes.size());
+    signalPlot->setSamples(signalX.data(),signalY.data(),signalY.size());
     plot->replot();
 
     QString filename = "Plot";
@@ -42,12 +43,12 @@ void Signal::generateSignal()
     if (file.open(QIODevice::Append)) {
         QTextStream stream(&file);
         stream <<endl<< "time=[";
-        for(auto it = timePlot.begin(); it != timePlot.end(); ++it) {
+        for(auto it = signalX.begin(); it != signalX.end(); ++it) {
            stream<<" "<<(*it);
         }
         stream<<"];"<<endl;
         stream << "values=[";
-        for(auto it = signalProbes.begin(); it != signalProbes.end(); ++it) {
+        for(auto it = signalY.begin(); it != signalY.end(); ++it) {
            stream<<" "<<(*it);
         }
         stream<<"];"<<endl;
@@ -73,9 +74,14 @@ void Signal::showSignals()
     generateSignal();
 }
 
-std::vector<double> Signal::getSignalProbes() const
+std::vector<double> Signal::getSignalY() const
 {
-    return signalProbes;
+    return signalY;
+}
+
+std::vector<double> Signal::getSignalX() const
+{
+    return signalX;
 }
 
 QwtPlot *Signal::getPlot() const

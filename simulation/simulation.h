@@ -40,7 +40,11 @@ public:
     void setObstacles(const std::list<Obstacle*> &obstacles);
 
     std::map<int, std::vector<double> > getDeltaTByReceiverNumber() const;
+    std::map<int, std::vector<double> > getTimeByReceiverNumber() const;
+
     void setPlot(QwtPlot *value);
+
+
 
 public slots:
     void simulate();

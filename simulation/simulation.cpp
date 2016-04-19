@@ -128,7 +128,7 @@ void Simulation::detectZeroCrossings()
         previousReceiversPattern[i]=0;
     }
     int receiverNumber;
-    int signalProbesSize = receivers.front()->getSignal()->getSignalProbes().size();
+    int signalProbesSize = receivers.front()->getSignal()->getSignalY().size();
     bool areReceiversHaveSignals = false;
     bool isPatternChanged = false;
 
@@ -142,7 +142,7 @@ void Simulation::detectZeroCrossings()
         // iteration over all signals and find phase delays
         receiverNumber=0;
         for(auto r=receivers.begin();r!=receivers.end();r++){
-            double actualProbe = (*r)->getSignal()->getSignalProbes().at(uS);
+            double actualProbe = (*r)->getSignal()->getSignalY().at(uS);
             if(!areReceiversHaveSignals && actualProbe!=0){ // [A]
                 hasSignal[receiverNumber]=true;
             }
@@ -246,14 +246,19 @@ bool Simulation::arePatternTheSame(int *pattern, int *previousPattern, int size)
     return true;
 }
 
-
-
 std::map<int, std::vector<double> > Simulation::getDeltaTByReceiverNumber() const
 {
     return deltaTByReceiverNumber;
+}
+
+std::map<int, std::vector<double> > Simulation::getTimeByReceiverNumber() const
+{
+    return timeByReceiverNumber;
 }
 
 void Simulation::setPlot(QwtPlot *value)
 {
     plot = value;
 }
+
+

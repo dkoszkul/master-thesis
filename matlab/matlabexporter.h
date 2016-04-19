@@ -9,9 +9,13 @@
 #include <iostream>
 #include <sstream>
 #include <list>
+#include <map>
+#include <vector>
+
 #include "sensors/receiver.h"
 #include "sensors/emitter.h"
 #include "sensors/obstacle.h"
+#include "simulation/simulation.h"
 
 class MatlabExporter : public QObject
 {
@@ -23,6 +27,7 @@ public:
     void setReceivers(const std::list<Receiver *> &value);
     void setEmitter(Emitter *value);
     void setObstacles(const std::list<Obstacle *> &value);
+    void setSimulation(Simulation *value);
 
 public slots:
     void exportResults();
@@ -32,6 +37,7 @@ private:
     std::list<Receiver*> receivers;
     Emitter* emitter;
     std::list<Obstacle*> obstacles;
+    Simulation* simulation;
 
 };
 

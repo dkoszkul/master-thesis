@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     status = new QLabel;
     settings = new SettingsDialog;
     matlabExporter = new MatlabExporter;
+    matlabExporter->setSimulation(simulation);
 
     //ui->statusBar->addWidget(status);
     ui->connectButton->setEnabled(true);

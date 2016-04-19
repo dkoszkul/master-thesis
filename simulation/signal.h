@@ -26,16 +26,20 @@ public:
     void setSignalPlot(QwtPlotCurve *value);
     void setPlot(QwtPlot *value);
 
-    std::vector<double> getSignalProbes() const;
+    std::vector<double> getSignalY() const;
+    std::vector<double> getSignalX() const;
+
     QwtPlotCurve *getSignalPlot() const;
     QwtPlot *getPlot() const;
+
 
 private:
     double signalMin = 0;
     double signalMax = 1500;
     double signalStep = 1;
     std::list<double> times;
-    std::vector<double> signalProbes;
+    std::vector<double> signalY;
+    std::vector<double> signalX;
 
     QwtPlot* plot;
     QwtPlotCurve *signalPlot;
