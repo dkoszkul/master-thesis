@@ -43,16 +43,16 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(ui->tabWidget);
 
     list<Obstacle*> obstacles;
-    obstacles.push_back(new Obstacle(120,100,0));
-    //obstacles.push_back(new Obstacle(120,121,0));
+    obstacles.push_back(new Obstacle(100,-5,0));
+    obstacles.push_back(new Obstacle(100,20,0));
     //obstacles.push_back(new Obstacle(100,140,0));
 
-    sensors.push_back(new Receiver(0,20,100,0));
-    sensors.push_back(new Receiver(1,20,111,0)); //11mm
-    sensors.push_back(new Receiver(2,10,115,0)); //4mm
+    sensors.push_back(new Receiver(0,0,0,0));
+    sensors.push_back(new Receiver(1,0,11,0)); //11mm
+    sensors.push_back(new Receiver(2,0,15,0)); //4mm
 
 
-    Emitter* emitter = new Emitter(5,100,0);
+    Emitter* emitter = new Emitter(0,0,0);
 
     simulation->setEmitter(emitter);
     simulation->setReceivers(sensors);
@@ -200,9 +200,9 @@ void MainWindow::setupDeltaTTab()
 {
     plot = new QwtPlot();
     plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
-    plot->setAxisScale( plot->yLeft, -1.0, 50);
-    plot->setAxisTitle(plot->xBottom,"time [uS]");
-    plot->setAxisTitle(plot->yLeft,"Δt [uS]");
+    plot->setAxisScale( plot->yLeft, -1.0, 80);
+    plot->setAxisTitle(plot->xBottom,"time [us]");
+    plot->setAxisTitle(plot->yLeft,"Δt [us]");
     ui->delta_T->addWidget(plot);
 
     simulation->setPlot(plot);

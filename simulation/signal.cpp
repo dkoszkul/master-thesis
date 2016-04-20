@@ -89,6 +89,11 @@ QwtPlot *Signal::getPlot() const
     return plot;
 }
 
+double Signal::getSignalStep() const
+{
+    return signalStep;
+}
+
 QwtPlotCurve *Signal::getSignalPlot() const
 {
     return signalPlot;

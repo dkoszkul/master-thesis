@@ -158,14 +158,15 @@ void Simulation::detectZeroCrossings()
                     if((*r)->getReceiverNumber() == referenceReceiver && receiverNumberToMeasure == 0){
                         doMeasurement = true;
                         receiverNumberToMeasure = referenceReceiver;
-                        referenceReceiverZeroCrossTime = uS;
+                        referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
                         receiversPatternIndex = 0;
                     }
                     // [.] measure the time if doMeasurement flag is raised
                     if(doMeasurement && (*r)->getReceiverNumber() == receiverNumberToMeasure){
                         // std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<" delta T: "<<(uS-referenceReceiverZeroCrossTime) <<std::endl;
-                        deltaTByReceiverNumber[receiverNumber].push_back(uS-referenceReceiverZeroCrossTime);
-                        timeByReceiverNumber[receiverNumber].push_back(uS);
+                        std::cout<<"R: "<<receiverNumber<<" "<<uS<<" "<<referenceReceiverZeroCrossTime<<std::endl;
+                        deltaTByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime);
+                        timeByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS));
                         receiverNumberToMeasure++;
                         if(receiverNumberToMeasure == receivers.size()) {
                             receiverNumberToMeasure = 0;

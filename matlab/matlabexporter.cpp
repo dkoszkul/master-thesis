@@ -27,12 +27,12 @@ void MatlabExporter::exportResults(){
         stream<<endl<<"% Receivers positions"<<endl;
         std::list<Receiver *> receivers = simulation->getReceivers();
         for(auto receiver = receivers.begin(); receiver != receivers.end();receiver++){
-            stream<<"circle("<<(*receiver)->getPositionX()<<","<<(*receiver)->getPositionY()<<",5,'b');"<<endl;
+            stream<<"circle("<<(*receiver)->getPositionX()<<","<<(*receiver)->getPositionY()<<",1.5,'k');"<<endl;
         }
 
-        stream<<endl<<"% Emitter position"<<endl;
+       /* stream<<endl<<"% Emitter position"<<endl;
         Object *emitter = simulation->getEmitter();
-        stream<<"plot("<<emitter->getPositionX()<<","<<emitter->getPositionY()<<",'ko','MarkerSize',30);"<<endl;
+        stream<<"plot("<<emitter->getPositionX()<<","<<emitter->getPositionY()<<",'ko','MarkerSize',30);"<<endl;*/
 
         stream<<endl<<"% Obstacle positions"<<endl;
         std::list<Obstacle *> obstacles = simulation->getObstacles();
@@ -61,7 +61,7 @@ void MatlabExporter::exportResults(){
             stream<<"grid on;"<<endl;
             stream<<"hold on;"<<endl;
             stream<<endl<<"plot(x"<<receiverNumber<<",y"<<receiverNumber<<");"<<endl;
-            stream<<"xlabel('time [uS]');"<<endl<<"ylabel('signal amplitude');"<<endl;
+            stream<<"xlabel('time [us]');"<<endl<<"ylabel('signal amplitude');"<<endl;
         }
 
         stream<<endl<<"'--------------------------------'"<<endl;

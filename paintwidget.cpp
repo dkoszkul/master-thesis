@@ -32,7 +32,7 @@ void PaintWidget::addObstacle(Object* obstacle){
 void PaintWidget::drawReceivers(QPainter *p){
     std::list<Object*>::iterator it;
     for(it=sensors.begin();it!=sensors.end();it++){
-        p->drawEllipse((*it)->getPositionX(), (*it)->getPositionY(), 10, 10);
+        p->drawEllipse((*it)->getPositionX(), (*it)->getPositionY(), 1, 1);
     }
 
 }
@@ -40,7 +40,7 @@ void PaintWidget::drawReceivers(QPainter *p){
 void PaintWidget::drawEmitter(QPainter *p){
     if(emitter != NULL){
         p->setBrush(QBrush(Qt::black));
-        p->drawEllipse(emitter->getPositionX(), emitter->getPositionY(), 10, 20);
+        p->drawEllipse(emitter->getPositionX(), emitter->getPositionY(), 1, 1);
     }
 
 }
@@ -49,7 +49,7 @@ void PaintWidget::drawObstacles(QPainter *p){
     std::list<Object*>::iterator it;
     for(it=obstacles.begin();it!=obstacles.end();it++){
         p->setBrush(QBrush(Qt::red));
-        p->drawEllipse((*it)->getPositionX(), (*it)->getPositionY(), 10, 10);
+        p->drawEllipse((*it)->getPositionX(), (*it)->getPositionY(), 1, 1);
     }
 
 }

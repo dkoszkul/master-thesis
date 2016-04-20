@@ -31,12 +31,12 @@ public:
 
     QwtPlotCurve *getSignalPlot() const;
     QwtPlot *getPlot() const;
-
+    double getSignalStep() const;
 
 private:
-    double signalMin = 0;
-    double signalMax = 1500;
-    double signalStep = 1;
+    double signalMin = 0.0;
+    double signalMax = 1500.0;
+    double signalStep = 1.0;
     std::list<double> times;
     std::vector<double> signalY;
     std::vector<double> signalX;
