@@ -43,9 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
     setCentralWidget(ui->tabWidget);
 
     list<Obstacle*> obstacles;
-    obstacles.push_back(new Obstacle(100,-5,0));
-    obstacles.push_back(new Obstacle(100,20,0));
-    //obstacles.push_back(new Obstacle(100,140,0));
+    obstacles.push_back(new Obstacle(100,22,0));
+   // obstacles.push_back(new Obstacle(140,20,0));
+    obstacles.push_back(new Obstacle(70,2,0));
 
     sensors.push_back(new Receiver(0,0,0,0));
     sensors.push_back(new Receiver(1,0,11,0)); //11mm

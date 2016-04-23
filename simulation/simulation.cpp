@@ -118,32 +118,25 @@ void Simulation::detectZeroCrossings()
     // [2] initialize necessary variables
     bool* hasSignal = new bool[receivers.size()];
     double* previousProbes = new double[receivers.size()];
-    int* previousReceiversPattern = new int[receivers.size()];
-    int* receiversPattern = new int[receivers.size()];
-    unsigned int receiversPatternIndex = 0;
     for(unsigned int i=0;i<receivers.size();i++){
         hasSignal[i]=false;
         previousProbes[i]=0;
-        receiversPattern[i]=0;
-        previousReceiversPattern[i]=0;
     }
     int receiverNumber;
     int signalProbesSize = receivers.front()->getSignal()->getSignalY().size();
     bool areReceiversHaveSignals = false;
-    bool isPatternChanged = false;
 
     int referenceReceiver = 0;
     int referenceReceiverZeroCrossTime = 0;
     bool doMeasurement = false;
-    int receiverNumberToMeasure = referenceReceiver;
 
     // [3] compute zero crossings
     for(int uS=0;uS<signalProbesSize;uS++){
         // iteration over all signals and find phase delays
         receiverNumber=0;
         for(auto r=receivers.begin();r!=receivers.end();r++){
-            double actualProbe = (*r)->getSignal()->getSignalY().at(uS);
-            if(!areReceiversHaveSignals && actualProbe!=0){ // [A]
+            double actualProbeValue = (*r)->getSignal()->getSignalY().at(uS);
+            if(!areReceiversHaveSignals && actualProbeValue!=0){ // [A]
                 hasSignal[receiverNumber]=true;
             }
 
@@ -153,28 +146,20 @@ void Simulation::detectZeroCrossings()
                     areReceiversHaveSignals = true;
                 }
                 // [.] always detect zero-crossing in signal
-                if(previousProbes[receiverNumber] < 0 && actualProbe > 0){
+                if(previousProbes[receiverNumber] < 0 && actualProbeValue > 0){
                     // [.] raise doMeasurement flag if zero-crossing belongs to the reference signal
-                    if((*r)->getReceiverNumber() == referenceReceiver && receiverNumberToMeasure == 0){
+                    if((*r)->getReceiverNumber() == referenceReceiver){
                         doMeasurement = true;
-                        receiverNumberToMeasure = referenceReceiver;
                         referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
-                        receiversPatternIndex = 0;
                     }
                     // [.] measure the time if doMeasurement flag is raised
-                    if(doMeasurement && (*r)->getReceiverNumber() == receiverNumberToMeasure){
-                        // std::cout<<"Receiver "<<receiverNumber<<" : zero crossing detection -/+ at "<<uS<<" delta T: "<<(uS-referenceReceiverZeroCrossTime) <<std::endl;
-                        std::cout<<"R: "<<receiverNumber<<" "<<uS<<" "<<referenceReceiverZeroCrossTime<<std::endl;
+                    if(doMeasurement){
                         deltaTByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime);
                         timeByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS));
-                        receiverNumberToMeasure++;
-                        if(receiverNumberToMeasure == receivers.size()) {
-                            receiverNumberToMeasure = 0;
-                        }
                     }
                 }
 
-                previousProbes[receiverNumber] = actualProbe;
+                previousProbes[receiverNumber] = actualProbeValue;
 
 
             }else{
@@ -182,15 +167,6 @@ void Simulation::detectZeroCrossings()
                 timeByReceiverNumber[receiverNumber].push_back(uS);
             }
             receiverNumber++;
-        }
-        if(areReceiversHaveSignals && receiversPatternIndex==0) {
-
-            if(!arePatternTheSame(receiversPattern,previousReceiversPattern, receivers.size())){
-                std::cout<<"Pattern changed!"<<std::endl;
-                isPatternChanged = true;
-            }
-            memcpy(previousReceiversPattern, receiversPattern, sizeof(int)*receivers.size());
-            //std::cout<<"[TIME]"<<uS<<"-- "<<receiversPattern[0]<<" "<<receiversPattern[1]<<" "<<receiversPattern[2]<<std::endl;
         }
     }
 
@@ -204,7 +180,7 @@ void Simulation::detectZeroCrossings()
         signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
 
         QString filename = "Data";
-       // filename.append(new QString(std::to_string(i).c_str()));
+        // filename.append(new QString(std::to_string(i).c_str()));
         filename.append(".txt");
         QFile file(filename);
         if (file.open(QIODevice::Append)) {
@@ -213,14 +189,14 @@ void Simulation::detectZeroCrossings()
             stream<<std::to_string(i).c_str();
             stream<<"=[";
             for(auto it = timeByReceiverNumber[i].begin(); it != timeByReceiverNumber[i].end(); ++it) {
-               stream<<" "<<(*it);
+                stream<<" "<<(*it);
             }
             stream<<"];"<<endl;
             stream << "values";
             stream<<std::to_string(i).c_str();
             stream<<"=[";
             for(auto it = deltaTByReceiverNumber[i].begin(); it != deltaTByReceiverNumber[i].end(); ++it) {
-               stream<<" "<<(*it);
+                stream<<" "<<(*it);
             }
             stream<<"];"<<endl;
         }
@@ -233,8 +209,6 @@ void Simulation::detectZeroCrossings()
     /**********************************/
     delete[] hasSignal;
     delete[] previousProbes;
-    delete[] receiversPattern;
-    delete[] previousReceiversPattern;
 }
 
 bool Simulation::arePatternTheSame(int *pattern, int *previousPattern, int size)

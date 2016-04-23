@@ -12,7 +12,7 @@ Signal::Signal(QObject *parent) : QObject(parent)
     signalPlot = new QwtPlotCurve( "signal" );
     signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
     signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
-    signalPlot->setPen( Qt::red );
+    signalPlot->setPen( Qt::blue );
     signalPlot->attach( plot );
 }
 
