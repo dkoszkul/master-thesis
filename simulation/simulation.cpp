@@ -108,6 +108,41 @@ bool Simulation::allReceiversHaveSignals(bool *signalTable, int size)
     return true;
 }
 
+void Simulation::exportComputedData()
+{
+    for(int i=0;i<receivers.size();i++){
+        QwtPlotCurve* signalPlot = new QwtPlotCurve( "delta T" );
+        signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+        signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+        signalPlot->setPen( Qt::red );
+        signalPlot->attach( plot );
+        signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
+
+        QString filename = "Data";
+        // filename.append(new QString(std::to_string(i).c_str()));
+        filename.append(".txt");
+        QFile file(filename);
+        if (file.open(QIODevice::Append)) {
+            QTextStream stream(&file);
+            stream <<endl<< "time";
+            stream<<std::to_string(i).c_str();
+            stream<<"=[";
+            for(auto it = timeByReceiverNumber[i].begin(); it != timeByReceiverNumber[i].end(); ++it) {
+                stream<<" "<<(*it);
+            }
+            stream<<"];"<<endl;
+            stream << "values";
+            stream<<std::to_string(i).c_str();
+            stream<<"=[";
+            for(auto it = deltaTByReceiverNumber[i].begin(); it != deltaTByReceiverNumber[i].end(); ++it) {
+                stream<<" "<<(*it);
+            }
+            stream<<"];"<<endl;
+        }
+
+    }
+}
+
 void Simulation::detectZeroCrossings()
 {
     // [1] method showSignals() computes signal values in every time tick
@@ -170,38 +205,7 @@ void Simulation::detectZeroCrossings()
         }
     }
 
-    std::cout<<deltaTByReceiverNumber[0].size()<<" "<<deltaTByReceiverNumber[1].size()<<" "<<deltaTByReceiverNumber[2].size()<<std::endl;
-    for(int i=0;i<receivers.size();i++){
-        QwtPlotCurve* signalPlot = new QwtPlotCurve( "delta T" );
-        signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
-        signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
-        signalPlot->setPen( Qt::red );
-        signalPlot->attach( plot );
-        signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
-
-        QString filename = "Data";
-        // filename.append(new QString(std::to_string(i).c_str()));
-        filename.append(".txt");
-        QFile file(filename);
-        if (file.open(QIODevice::Append)) {
-            QTextStream stream(&file);
-            stream <<endl<< "time";
-            stream<<std::to_string(i).c_str();
-            stream<<"=[";
-            for(auto it = timeByReceiverNumber[i].begin(); it != timeByReceiverNumber[i].end(); ++it) {
-                stream<<" "<<(*it);
-            }
-            stream<<"];"<<endl;
-            stream << "values";
-            stream<<std::to_string(i).c_str();
-            stream<<"=[";
-            for(auto it = deltaTByReceiverNumber[i].begin(); it != deltaTByReceiverNumber[i].end(); ++it) {
-                stream<<" "<<(*it);
-            }
-            stream<<"];"<<endl;
-        }
-
-    }
+    exportComputedData();
     plot->replot();
 
     /**********************************/
