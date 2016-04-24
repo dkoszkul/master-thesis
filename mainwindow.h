@@ -78,8 +78,7 @@ private:
     SettingsDialog *settings;
     MatlabExporter *matlabExporter;
 
-    void setupPlotsTab();
-    void setupDeltaTTab();
+    void setupSimulationTab();
 
     QwtPlot* plot;
     void createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter);

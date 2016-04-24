@@ -64,8 +64,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initActionsConnections();
     /* plots */
-    setupPlotsTab();
-    setupDeltaTTab();
+    setupSimulationTab();
 }
 
 MainWindow::~MainWindow()
@@ -195,7 +194,7 @@ void MainWindow::sendStopSignal(){
 
 }
 
-void MainWindow::setupPlotsTab()
+void MainWindow::setupSimulationTab()
 {
     for(auto r=sensors.begin();r!=sensors.end();r++){
         std::cout<<(*r)->getReceiverNumber()<<std::endl;
@@ -205,11 +204,6 @@ void MainWindow::setupPlotsTab()
         ui->plotLayout->addWidget(plot);
     }
 
-}
-
-
-void MainWindow::setupDeltaTTab()
-{
     plot = new QwtPlot();
     plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
     plot->setAxisScale( plot->yLeft, -1.0, 26);
@@ -219,8 +213,8 @@ void MainWindow::setupDeltaTTab()
 
     simulation->setPlot(plot);
 
-
 }
+
 void MainWindow::createXAxisLine(QwtPlot* plot)
 {
     QwtPlotMarker *mY = new QwtPlotMarker();
