@@ -24,13 +24,11 @@ class MatlabExporter : public QObject
 public:
     explicit MatlabExporter(QObject *parent = 0);
 
-    void setFilePath(const std::string &value);
     void setObstacles(const std::list<Obstacle *> &value);
     void setSimulation(Simulation *value);
     void exportResults(QString *filename);
 
 private:
-    std::string filePath;
     Simulation* simulation;
 
 };
