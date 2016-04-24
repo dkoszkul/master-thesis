@@ -143,25 +143,21 @@ void MainWindow::handleSave()
 
 void MainWindow::initActionsConnections()
 {
-    connect(ui->simulate,           &QPushButton::clicked, simulation,      &Simulation::simulate);
+    connect(ui->simulate, SIGNAL(clicked()), simulation, SLOT(simulate()));
 
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
     connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    connect(ui->clearConsoleButton, SIGNAL(clicked()), console, SLOT(clear()));
 
     connect(ui->uartSettingsButton, SIGNAL(clicked()), settings, SLOT(show()));
     connect(ui->connectButton, SIGNAL(clicked()), this, SLOT(openSerialPort()));
     connect(ui->disconnectButton, SIGNAL(clicked()), this, SLOT(closeSerialPort()));
-    connect(ui->clearConsoleButton, SIGNAL(clicked()), console, SLOT(clear()));
-
     connect(ui->startButton,SIGNAL(clicked()), this, SLOT(sendStartSignal()));
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
-
-    connect(ui->load,               &QPushButton::clicked,  this,           &MainWindow::openAndLoadConfiguration);
-    connect(ui->clear,              &QPushButton::clicked,  this,           &MainWindow::handleClearButton);
-
-    /* connections for plot tab */
-    connect(ui->save,               &QPushButton::clicked,  this, &MainWindow::handleSave);
+    connect(ui->load, SIGNAL(clicked()), this, SLOT(openAndLoadConfiguration()));
+    connect(ui->clear, SIGNAL(clicked()), this, SLOT(handleClearButton()));
+    connect(ui->save, SIGNAL(clicked()), this, SLOT(handleSave()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)
