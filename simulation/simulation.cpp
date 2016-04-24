@@ -27,6 +27,9 @@ void Simulation::setObstacles(const std::list<Obstacle*> &obstacles)
 
 void Simulation::simulate()
 {
+    deltaTByReceiverNumber.clear();
+    timeByReceiverNumber.clear();
+
     std::cout<<"simulate"<<std::endl;
     std::cout<<"In the simulation we have "<<this->obstacles.size()<<" obstacles and "<<this->receivers.size()<<" receivers"<<std::endl;
 
@@ -64,6 +67,16 @@ void Simulation::simulate()
         }
         t = times.erase(t);
     }
+
+    for(auto r=receivers.begin();r!=receivers.end();r++){
+        list<double> times = (*r)->getCopyTimes();
+        std::cout<<"Receiver "<<(*r)->getReceiverNumber()<<" ";
+        for(auto t=times.begin();t!=times.end();t++){
+            std::cout<<(*t)<<" ";
+        }
+        std::cout<<std::endl;
+    }
+
     for(auto r=receivers.begin();r!=receivers.end();r++){
         (*r)->setTimes((*r)->getCopyTimes()); //this step is important after computing the delays to recover the TOF
         cout<<(*r)->getTimes().size();
@@ -240,17 +253,16 @@ void Simulation::setPlot(QwtPlot *value)
     plot = value;
 }
 
-
-
-std::list<Obstacle *> Simulation::getObstacles() const
+std::list<Obstacle *> &Simulation::getObstacles()
 {
-    return obstacles;
+    return this->obstacles;
 }
 
-std::list<Receiver *> Simulation::getReceivers() const
+std::list<Receiver *> &Simulation::getReceivers()
 {
-    return receivers;
+    return this->receivers;
 }
+
 
 Object *Simulation::getEmitter() const
 {

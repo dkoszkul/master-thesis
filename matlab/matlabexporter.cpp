@@ -2,22 +2,15 @@
 
 MatlabExporter::MatlabExporter(QObject *parent) : QObject(parent)
 {
-    filePath ="/home/dominik/Desktop";
+
 }
 
-void MatlabExporter::setFilePath(const std::string &value)
-{
-    filePath = value;
-}
+void MatlabExporter::exportResults(QString* filename){
 
-void MatlabExporter::exportResults(){
-
-    QString filename;
-    filename.append(filePath.c_str());
-    filename.append("/result_");
-    filename.append(std::to_string(QDateTime::currentMSecsSinceEpoch()).c_str());
-    filename.append(".m");
-    QFile file(filename);
+    if(!filename->contains((".m"))){
+        filename->append(".m");
+    }
+    QFile file(*filename);
     if (file.open(QIODevice::ReadWrite)) {
         QTextStream stream(&file);
         stream<<"figure()"<<endl;
@@ -29,10 +22,6 @@ void MatlabExporter::exportResults(){
         for(auto receiver = receivers.begin(); receiver != receivers.end();receiver++){
             stream<<"circle("<<(*receiver)->getPositionX()<<","<<(*receiver)->getPositionY()<<",1.5,'k');"<<endl;
         }
-
-       /* stream<<endl<<"% Emitter position"<<endl;
-        Object *emitter = simulation->getEmitter();
-        stream<<"plot("<<emitter->getPositionX()<<","<<emitter->getPositionY()<<",'ko','MarkerSize',30);"<<endl;*/
 
         stream<<endl<<"% Obstacle positions"<<endl;
         std::list<Obstacle *> obstacles = simulation->getObstacles();
@@ -65,7 +54,7 @@ void MatlabExporter::exportResults(){
         }
 
         stream<<endl<<"'--------------------------------'"<<endl;
-        for(int i=0;i<receivers.size();i++){
+        for(unsigned int i=0;i<receivers.size();i++){
             stream <<endl<< "x";
             stream<<std::to_string(i).c_str();
             stream<<"=[";
@@ -86,7 +75,7 @@ void MatlabExporter::exportResults(){
         stream<<"figure()"<<endl;
         stream<<"grid on;"<<endl;
         stream<<"hold on;"<<endl;
-        for(int i=0;i<receivers.size();i++){
+        for(unsigned int i=0;i<receivers.size();i++){
             stream<<"plot(x"<<i<<",y"<<i<<");"<<endl;
         }
 

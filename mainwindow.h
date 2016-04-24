@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
+#include <QFileDialog>
 
 #include "console/console.h"
 #include "simulation/signal.h"
@@ -17,6 +18,7 @@
 #include "matlab/matlabexporter.h"
 
 #include <iostream>
+#include <sstream>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -55,17 +57,15 @@ private slots:
     void readData();
     void sendStartSignal();
     void sendStopSignal();
-
     void handleError(QSerialPort::SerialPortError error);
-
-    void showSignals();
+    void openAndLoadConfiguration();
+    void handleClearButton();
+    void handleSave();
 
 private:
     Ui::MainWindow *ui;
     Simulation* simulation;
     Signal* signal;
-
-    list<Receiver*> sensors;
 
     void initActionsConnections();
     void showStatusMessage(const QString &message);
@@ -76,11 +76,10 @@ private:
     SettingsDialog *settings;
     MatlabExporter *matlabExporter;
 
-    void setupPlotsTab();
-    void setupDeltaTTab();
+    void setupSimulationTab();
 
     QwtPlot* plot;
-    void createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter);
+    void processLine(QString line);
 };
 
 #endif // MAINWINDOW_H
