@@ -113,27 +113,33 @@ void MainWindow::openAndLoadConfiguration()
 
 }
 
+void MainWindow::handleClearButton()
+{
+
+}
+
 
 void MainWindow::initActionsConnections()
 {
-    connect(ui->simulate, &QPushButton::clicked, simulation, &Simulation::simulate);
+    connect(ui->simulate,           &QPushButton::clicked, simulation,      &Simulation::simulate);
 
-    connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
-    connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
-    connect(console, SIGNAL(getData(QByteArray)), this, SLOT(writeData(QByteArray)));
+    connect(serial,                 &QSerialPort::error(QSerialPort::SerialPortError), this, &MainWindow::handleError(QSerialPort::SerialPortError));
+    connect(serial,                 &QSerialPort::readyRead, this,          &MainWindow::readData);
+    connect(console,                &Console::getData(QByteArray), this,    &MainWindow::writeData(QByteArray));
 
-    connect(ui->uartSettingsButton, SIGNAL(clicked()), settings, SLOT(show()));
-    connect(ui->connectButton, SIGNAL(clicked()), this, SLOT(openSerialPort()));
-    connect(ui->disconnectButton, SIGNAL(clicked()), this, SLOT(closeSerialPort()));
-    connect(ui->clearConsoleButton, SIGNAL(clicked()), console, SLOT(clear()));
+    connect(ui->uartSettingsButton, &QPushButton::clicked,  settings,       &SettingsDialog::show);
+    connect(ui->connectButton,      &QPushButton::clicked,  this,           &MainWindow::openSerialPort);
+    connect(ui->disconnectButton,   &QPushButton::clicked,  this,           &MainWindow::closeSerialPort);
+    connect(ui->clearConsoleButton, &QPushButton::clicked,  console,        &Console::clear);
 
-    connect(ui->startButton,SIGNAL(clicked()), this, SLOT(sendStartSignal()));
-    connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
+    connect(ui->startButton,        &QPushButton::clicked,  this,           &MainWindow::sendStartSignal);
+    connect(ui->stopButton,         &QPushButton::clicked,  this,           &MainWindow::sendStopSignal);
 
-    connect(ui->load,&QPushButton::clicked,this, &MainWindow::openAndLoadConfiguration);
+    connect(ui->load,               &QPushButton::clicked,  this,           &MainWindow::openAndLoadConfiguration);
+    connect(ui->clear,              &QPushButton::clicked,  this,           &MainWindow::handleClearButton);
 
     /* connections for plot tab */
-    connect(ui->save,&QPushButton::clicked, matlabExporter, &MatlabExporter::exportResults);
+    connect(ui->save,               &QPushButton::clicked,  matlabExporter, &MatlabExporter::exportResults);
 }
 
 void MainWindow::showStatusMessage(const QString &message)

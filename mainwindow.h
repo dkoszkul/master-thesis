@@ -59,6 +59,7 @@ private slots:
     void sendStopSignal();
     void handleError(QSerialPort::SerialPortError error);
     void openAndLoadConfiguration();
+    void handleClearButton();
 
 private:
     Ui::MainWindow *ui;
