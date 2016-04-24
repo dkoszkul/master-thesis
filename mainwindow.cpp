@@ -162,7 +162,6 @@ void MainWindow::initActionsConnections()
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
 
     /* connections for plot tab */
-    connect(ui->plotsSignalsButton,&QPushButton::clicked, this, &MainWindow::showSignals);
     connect(ui->exportResults,&QPushButton::clicked, matlabExporter, &MatlabExporter::exportResults);
 }
 
@@ -189,6 +188,7 @@ void MainWindow::setupPlotsTab()
     for(auto r=sensors.begin();r!=sensors.end();r++){
         std::cout<<(*r)->getReceiverNumber()<<std::endl;
         QwtPlot* plot = (*r)->getSignal()->getPlot();
+        plot->setMaximumHeight(150);
         createXAxisLine(plot);
         ui->plotLayout->addWidget(plot);
     }
@@ -200,10 +200,10 @@ void MainWindow::setupDeltaTTab()
 {
     plot = new QwtPlot();
     plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
-    plot->setAxisScale( plot->yLeft, -1.0, 80);
+    plot->setAxisScale( plot->yLeft, -1.0, 26);
     plot->setAxisTitle(plot->xBottom,"time [us]");
     plot->setAxisTitle(plot->yLeft,"Δt [us]");
-    ui->delta_T->addWidget(plot);
+    ui->verticalLayout_6->addWidget(plot);
 
     simulation->setPlot(plot);
 

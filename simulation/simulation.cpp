@@ -64,6 +64,16 @@ void Simulation::simulate()
         }
         t = times.erase(t);
     }
+
+    for(auto r=receivers.begin();r!=receivers.end();r++){
+        list<double> times = (*r)->getCopyTimes();
+        std::cout<<"Receiver "<<(*r)->getReceiverNumber()<<" ";
+        for(auto t=times.begin();t!=times.end();t++){
+            std::cout<<(*t)<<" ";
+        }
+        std::cout<<std::endl;
+    }
+
     for(auto r=receivers.begin();r!=receivers.end();r++){
         (*r)->setTimes((*r)->getCopyTimes()); //this step is important after computing the delays to recover the TOF
         cout<<(*r)->getTimes().size();
