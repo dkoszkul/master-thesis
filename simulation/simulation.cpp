@@ -27,6 +27,9 @@ void Simulation::setObstacles(const std::list<Obstacle*> &obstacles)
 
 void Simulation::simulate()
 {
+    deltaTByReceiverNumber.clear();
+    timeByReceiverNumber.clear();
+
     std::cout<<"simulate"<<std::endl;
     std::cout<<"In the simulation we have "<<this->obstacles.size()<<" obstacles and "<<this->receivers.size()<<" receivers"<<std::endl;
 

@@ -22,7 +22,7 @@ Receiver::Receiver(int receiverNumber, int positionX, int positionY, double angl
 
 Receiver::~Receiver()
 {
-
+    delete signal;
 }
 
 void Receiver::resetReceiver()

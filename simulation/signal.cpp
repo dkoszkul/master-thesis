@@ -18,7 +18,8 @@ Signal::Signal(QObject *parent) : QObject(parent)
 
 Signal::~Signal()
 {
-
+    delete plot;
+    delete signalPlot;
 }
 
 void Signal::generateSignal()
