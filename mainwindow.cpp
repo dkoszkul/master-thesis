@@ -28,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     initActionsConnections();
 
+    ui->simulate->setEnabled(false);
+    ui->save->setEnabled(false);
+    ui->clear->setEnabled(false);
+
 }
 
 MainWindow::~MainWindow()
@@ -111,6 +115,11 @@ void MainWindow::openAndLoadConfiguration()
 
     setupSimulationTab();
 
+    ui->load->setEnabled(false);
+    ui->simulate->setEnabled(true);
+    ui->save->setEnabled(true);
+    ui->clear->setEnabled(true);
+
 }
 
 void MainWindow::handleClearButton()
@@ -127,6 +136,11 @@ void MainWindow::handleClearButton()
         delete item;
     }
     layout->addItem(new QSpacerItem(0,0, QSizePolicy::Expanding, QSizePolicy::Minimum));
+
+    ui->load->setEnabled(true);
+    ui->simulate->setEnabled(false);
+    ui->save->setEnabled(false);
+    ui->clear->setEnabled(false);
 }
 
 void MainWindow::handleSave()

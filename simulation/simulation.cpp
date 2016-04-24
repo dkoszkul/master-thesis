@@ -123,7 +123,7 @@ bool Simulation::allReceiversHaveSignals(bool *signalTable, int size)
 
 void Simulation::exportComputedData()
 {
-    for(int i=0;i<receivers.size();i++){
+    for(unsigned int i=0;i<receivers.size();i++){
         QwtPlotCurve* signalPlot = new QwtPlotCurve( "delta T" );
         signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
         signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
