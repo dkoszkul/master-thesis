@@ -135,14 +135,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="clear">
             <property name="text">
              <string>Clear</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="load">
             <property name="text">
              <string>Load...</string>
             </property>

@@ -144,6 +144,16 @@ void MainWindow::showSignals()
     }
 }
 
+void MainWindow::openAndLoadConfiguration()
+{
+    QString filename = QFileDialog::getOpenFileName(
+                this,
+                tr("Open simulation configuration file..."),
+                "",
+                "All files (*.*);;Text files (*.txt)"
+                );
+}
+
 
 void MainWindow::initActionsConnections()
 {
@@ -160,6 +170,8 @@ void MainWindow::initActionsConnections()
 
     connect(ui->startButton,SIGNAL(clicked()), this, SLOT(sendStartSignal()));
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
+
+    connect(ui->load,&QPushButton::clicked,this, &MainWindow::openAndLoadConfiguration);
 
     /* connections for plot tab */
     connect(ui->save,&QPushButton::clicked, matlabExporter, &MatlabExporter::exportResults);

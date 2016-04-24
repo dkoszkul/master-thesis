@@ -7,6 +7,7 @@
 #include <QMessageBox>
 #include <QLabel>
 #include <QtSerialPort/QSerialPort>
+#include <QFileDialog>
 
 #include "console/console.h"
 #include "simulation/signal.h"
@@ -59,6 +60,7 @@ private slots:
     void handleError(QSerialPort::SerialPortError error);
 
     void showSignals();
+    void openAndLoadConfiguration();
 
 private:
     Ui::MainWindow *ui;
