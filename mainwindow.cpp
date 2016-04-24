@@ -3,7 +3,7 @@
 #include "paintwidget.h"
 void MainWindow::createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter)
 {
-    PaintWidget* widget = new PaintWidget;
+  /*  PaintWidget* widget = new PaintWidget;
     for(auto it=sensors.begin();it!=sensors.end();it++){
         widget->addReceiver((*it));
     }
@@ -14,7 +14,7 @@ void MainWindow::createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter)
         widget->addObstacle((*it));
     }
 
-    ui->gridLayout->addWidget(widget);
+    ui->gridLayout->addWidget(widget);*/
 }
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -60,7 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     matlabExporter->setSimulation(simulation);
 
-    createPaintWidget(obstacles, emitter);
+   // createPaintWidget(obstacles, emitter);
 
     initActionsConnections();
     /* plots */
@@ -147,7 +147,7 @@ void MainWindow::showSignals()
 
 void MainWindow::initActionsConnections()
 {
-    connect(ui->pushButton, &QPushButton::clicked, simulation, &Simulation::simulate);
+    connect(ui->simulate, &QPushButton::clicked, simulation, &Simulation::simulate);
 
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
@@ -162,7 +162,7 @@ void MainWindow::initActionsConnections()
     connect(ui->stopButton,SIGNAL(clicked()), this, SLOT(sendStopSignal()));
 
     /* connections for plot tab */
-    connect(ui->exportResults,&QPushButton::clicked, matlabExporter, &MatlabExporter::exportResults);
+    connect(ui->save,&QPushButton::clicked, matlabExporter, &MatlabExporter::exportResults);
 }
 
 void MainWindow::showStatusMessage(const QString &message)
@@ -203,7 +203,7 @@ void MainWindow::setupDeltaTTab()
     plot->setAxisScale( plot->yLeft, -1.0, 26);
     plot->setAxisTitle(plot->xBottom,"time [us]");
     plot->setAxisTitle(plot->yLeft,"Δt [us]");
-    ui->verticalLayout_6->addWidget(plot);
+    ui->plotLayout->addWidget(plot);
 
     simulation->setPlot(plot);
 

@@ -11,53 +11,15 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Master thesis</string>
+   <string>Object localization in a robot environment by using a system of ultrasonic range finder modules  (Dominik Koszkul, 2016)</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Simulation</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_8">
-        <item>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QPushButton" name="pushButton">
-            <property name="text">
-             <string>Fire the simulation</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="exportResults">
-            <property name="text">
-             <string>Export results</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
         <string>Connection</string>
@@ -146,23 +108,55 @@
       </widget>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
-        <string>Plots</string>
+        <string>Simulation</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <layout class="QVBoxLayout" name="plotLayout">
-          <property name="sizeConstraint">
-           <enum>QLayout::SetFixedSize</enum>
-          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
-           <spacer name="horizontalSpacer_6">
+           <widget class="QPushButton" name="simulate">
+            <property name="text">
+             <string>Simulate</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="save">
+            <property name="text">
+             <string>Save...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="text">
+             <string>Clear</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>Load...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>40</height>
              </size>
             </property>
            </spacer>
@@ -170,7 +164,18 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_6"/>
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="plotLayout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+         </layout>
         </item>
        </layout>
       </widget>
