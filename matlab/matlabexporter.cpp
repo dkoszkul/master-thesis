@@ -10,14 +10,12 @@ void MatlabExporter::setFilePath(const std::string &value)
     filePath = value;
 }
 
-void MatlabExporter::exportResults(){
+void MatlabExporter::exportResults(QString* filename){
 
-    QString filename;
-    filename.append(filePath.c_str());
-    filename.append("/result_");
-    filename.append(std::to_string(QDateTime::currentMSecsSinceEpoch()).c_str());
-    filename.append(".m");
-    QFile file(filename);
+    if(!filename->contains((".m"))){
+        filename->append(".m");
+    }
+    QFile file(*filename);
     if (file.open(QIODevice::ReadWrite)) {
         QTextStream stream(&file);
         stream<<"figure()"<<endl;

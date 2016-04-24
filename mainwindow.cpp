@@ -129,6 +129,17 @@ void MainWindow::handleClearButton()
     layout->addItem(new QSpacerItem(0,0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 }
 
+void MainWindow::handleSave()
+{
+    QString filename = QFileDialog::getSaveFileName(
+                this,
+                tr("Save simulation results..."),
+                "result.m",
+                ".m"
+                );
+    matlabExporter->exportResults(&filename);
+}
+
 
 void MainWindow::initActionsConnections()
 {
@@ -150,7 +161,7 @@ void MainWindow::initActionsConnections()
     connect(ui->clear,              &QPushButton::clicked,  this,           &MainWindow::handleClearButton);
 
     /* connections for plot tab */
-    connect(ui->save,               &QPushButton::clicked,  matlabExporter, &MatlabExporter::exportResults);
+    connect(ui->save,               &QPushButton::clicked,  this, &MainWindow::handleSave);
 }
 
 void MainWindow::showStatusMessage(const QString &message)

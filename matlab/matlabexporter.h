@@ -27,9 +27,7 @@ public:
     void setFilePath(const std::string &value);
     void setObstacles(const std::list<Obstacle *> &value);
     void setSimulation(Simulation *value);
-
-public slots:
-    void exportResults();
+    void exportResults(QString *filename);
 
 private:
     std::string filePath;

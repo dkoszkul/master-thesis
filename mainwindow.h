@@ -60,6 +60,7 @@ private slots:
     void handleError(QSerialPort::SerialPortError error);
     void openAndLoadConfiguration();
     void handleClearButton();
+    void handleSave();
 
 private:
     Ui::MainWindow *ui;
