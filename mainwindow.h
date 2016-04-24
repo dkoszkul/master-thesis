@@ -57,10 +57,7 @@ private slots:
     void readData();
     void sendStartSignal();
     void sendStopSignal();
-
     void handleError(QSerialPort::SerialPortError error);
-
-    void showSignals();
     void openAndLoadConfiguration();
 
 private:

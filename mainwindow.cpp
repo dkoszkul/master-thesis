@@ -91,20 +91,13 @@ void MainWindow::handleError(QSerialPort::SerialPortError error)
     }
 }
 
-void MainWindow::showSignals()
-{
-    for(list<Receiver*>::iterator r=sensors.begin();r!=sensors.end();r++){
-        (*r)->getSignal()->showSignals();
-    }
-}
-
 void MainWindow::openAndLoadConfiguration()
 {
     QString filename = QFileDialog::getOpenFileName(
                 this,
                 tr("Open simulation configuration file..."),
                 "",
-                "All files (*.*);;Text files (*.txt)"
+                "All files (*.*);;Configuration files (*.dk)"
                 );
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -115,6 +108,7 @@ void MainWindow::openAndLoadConfiguration()
         QString line = in.readLine();
         processLine(line);
     }
+
     setupSimulationTab();
 
 }
