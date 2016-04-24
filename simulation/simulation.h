@@ -43,8 +43,8 @@ public:
     std::map<int, std::vector<double> > getDeltaTByReceiverNumber() const;
     std::map<int, std::vector<double> > getTimeByReceiverNumber() const;
     void setPlot(QwtPlot *value);
-    std::list<Obstacle *> getObstacles() const;
-    std::list<Receiver *> getReceivers() const;
+    std::list<Obstacle *> &getObstacles();
+    std::list<Receiver *> &getReceivers();
     Object *getEmitter() const;
 
 public slots:

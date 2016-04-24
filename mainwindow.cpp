@@ -1,70 +1,33 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "paintwidget.h"
-void MainWindow::createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter)
-{
-  /*  PaintWidget* widget = new PaintWidget;
-    for(auto it=sensors.begin();it!=sensors.end();it++){
-        widget->addReceiver((*it));
-    }
-
-    widget->addEmitter(emitter);
-
-    for(auto it=obstacles.begin();it!=obstacles.end();it++){
-        widget->addObstacle((*it));
-    }
-
-    ui->gridLayout->addWidget(widget);*/
-}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    simulation = new Simulation();
+    simulation = new Simulation;
     console = new Console;
-    signal = new Signal();
-
-    ui->setupUi(this);
-
-    console->setEnabled(false);
-    // console->setMaximumHeight(100);
-    ui->consoleLayout->addWidget(console);
+    signal = new Signal;
     serial = new QSerialPort(this);
     status = new QLabel;
     settings = new SettingsDialog;
     matlabExporter = new MatlabExporter;
 
-    //ui->statusBar->addWidget(status);
+    ui->setupUi(this);
+
+    console->setEnabled(false);
+    ui->consoleLayout->addWidget(console);
     ui->connectButton->setEnabled(true);
     ui->disconnectButton->setEnabled(false);
     ui->uartSettingsButton->setEnabled(true);
 
     setCentralWidget(ui->tabWidget);
 
-    list<Obstacle*> obstacles;
-    obstacles.push_back(new Obstacle(100,22,0));
-   // obstacles.push_back(new Obstacle(140,20,0));
-    obstacles.push_back(new Obstacle(70,2,0));
-
-    sensors.push_back(new Receiver(0,0,0,0));
-    sensors.push_back(new Receiver(1,0,11,0)); //11mm
-    sensors.push_back(new Receiver(2,0,15,0)); //4mm
-
-
-    Emitter* emitter = new Emitter(0,0,0);
-
-    simulation->setEmitter(emitter);
-    simulation->setReceivers(sensors);
-    simulation->setObstacles(obstacles);
-
     matlabExporter->setSimulation(simulation);
 
-   // createPaintWidget(obstacles, emitter);
-
     initActionsConnections();
-    /* plots */
-    setupSimulationTab();
+
 }
 
 MainWindow::~MainWindow()
@@ -96,9 +59,7 @@ void MainWindow::openSerialPort()
         showStatusMessage(tr("Open error"));
     }
 }
-//! [4]
 
-//! [5]
 void MainWindow::closeSerialPort()
 {
     if (serial->isOpen()){
@@ -111,23 +72,17 @@ void MainWindow::closeSerialPort()
     showStatusMessage(tr("Disconnected"));
 }
 
-//! [6]
 void MainWindow::writeData(const QByteArray &data)
 {
     serial->write(data);
 }
-//! [6]
 
-//! [7]
 void MainWindow::readData()
 {
     QByteArray data = serial->readAll();
     console->putData(data);
-    //ui->lcdNumber_3->display((ui->lcdNumber_3->value())+1);
 }
-//! [7]
 
-//! [8]
 void MainWindow::handleError(QSerialPort::SerialPortError error)
 {
     if (error == QSerialPort::ResourceError) {
@@ -151,6 +106,17 @@ void MainWindow::openAndLoadConfiguration()
                 "",
                 "All files (*.*);;Text files (*.txt)"
                 );
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        return;
+    }
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        processLine(line);
+    }
+    setupSimulationTab();
+
 }
 
 
@@ -196,7 +162,9 @@ void MainWindow::sendStopSignal(){
 
 void MainWindow::setupSimulationTab()
 {
-    for(auto r=sensors.begin();r!=sensors.end();r++){
+    std::list<Receiver *> receivers = simulation->getReceivers();
+
+    for(auto r=receivers.begin();r!=receivers.end();r++){
         std::cout<<(*r)->getReceiverNumber()<<std::endl;
         QwtPlot* plot = (*r)->getSignal()->getPlot();
         plot->setMaximumHeight(150);
@@ -211,6 +179,7 @@ void MainWindow::setupSimulationTab()
     plot->setAxisTitle(plot->yLeft,"Δt [us]");
     ui->plotLayout->addWidget(plot);
 
+
     simulation->setPlot(plot);
 
 }
@@ -224,3 +193,26 @@ void MainWindow::createXAxisLine(QwtPlot* plot)
     mY->attach( plot );
 }
 
+void MainWindow::processLine(QString line)
+{
+    std::stringstream ss;
+    ss<<line.toStdString();
+
+    std::string name;
+    int x,y;
+
+    if(line.contains("emitter")){
+        ss>>name>>x>>y;
+        simulation->setEmitter(new Emitter(x,y,0));
+
+    }else if(line.contains("receiver")){
+        int receiverNumber;
+        ss>>name>>receiverNumber>>x>>y;
+        simulation->getReceivers().push_back(new Receiver(receiverNumber,x,y,0));
+
+    }else if(line.contains("obstacle")){
+        ss>>name>>x>>y;
+        simulation->getObstacles().push_back(new Obstacle(x,y,0));
+    }
+
+}

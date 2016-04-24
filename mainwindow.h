@@ -18,6 +18,7 @@
 #include "matlab/matlabexporter.h"
 
 #include <iostream>
+#include <sstream>
 
 #include <qwt_plot.h>
 #include <qwt_plot_curve.h>
@@ -67,8 +68,6 @@ private:
     Simulation* simulation;
     Signal* signal;
 
-    list<Receiver*> sensors;
-
     void initActionsConnections();
     void showStatusMessage(const QString &message);
 
@@ -81,7 +80,7 @@ private:
     void setupSimulationTab();
 
     QwtPlot* plot;
-    void createPaintWidget(list<Obstacle*> obstacles, Emitter* emitter);
+    void processLine(QString line);
 };
 
 #endif // MAINWINDOW_H

@@ -250,17 +250,16 @@ void Simulation::setPlot(QwtPlot *value)
     plot = value;
 }
 
-
-
-std::list<Obstacle *> Simulation::getObstacles() const
+std::list<Obstacle *> &Simulation::getObstacles()
 {
-    return obstacles;
+    return this->obstacles;
 }
 
-std::list<Receiver *> Simulation::getReceivers() const
+std::list<Receiver *> &Simulation::getReceivers()
 {
-    return receivers;
+    return this->receivers;
 }
+
 
 Object *Simulation::getEmitter() const
 {
