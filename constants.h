@@ -10,5 +10,4 @@
 
 #define SPEED_OF_SOUND 343.2  // [m/s]
 
-
 #endif // CONSTANTS_H
