@@ -2,12 +2,12 @@
 
 Simulation::Simulation(QObject *parent) : QObject(parent)
 {
-
+    algorithm = new Algorithm;
 }
 
 Simulation::~Simulation()
 {
-
+    delete algorithm;
 }
 
 void Simulation::setEmitter(Object *emitter)
@@ -121,7 +121,7 @@ bool Simulation::allReceiversHaveSignals(bool *signalTable, int size)
     return true;
 }
 
-void Simulation::exportComputedData()
+void Simulation::plotPhaseShift()
 {
     for(unsigned int i=0;i<receivers.size();i++){
         QwtPlotCurve* signalPlot = new QwtPlotCurve( "delta T" );
@@ -130,29 +130,6 @@ void Simulation::exportComputedData()
         signalPlot->setPen( Qt::red );
         signalPlot->attach( plot );
         signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
-
-        QString filename = "Data";
-        // filename.append(new QString(std::to_string(i).c_str()));
-        filename.append(".txt");
-        QFile file(filename);
-        if (file.open(QIODevice::Append)) {
-            QTextStream stream(&file);
-            stream <<endl<< "time";
-            stream<<std::to_string(i).c_str();
-            stream<<"=[";
-            for(auto it = timeByReceiverNumber[i].begin(); it != timeByReceiverNumber[i].end(); ++it) {
-                stream<<" "<<(*it);
-            }
-            stream<<"];"<<endl;
-            stream << "values";
-            stream<<std::to_string(i).c_str();
-            stream<<"=[";
-            for(auto it = deltaTByReceiverNumber[i].begin(); it != deltaTByReceiverNumber[i].end(); ++it) {
-                stream<<" "<<(*it);
-            }
-            stream<<"];"<<endl;
-        }
-
     }
 }
 
@@ -218,7 +195,7 @@ void Simulation::detectZeroCrossings()
         }
     }
 
-    exportComputedData();
+    plotPhaseShift();
     plot->replot();
 
     /**********************************/

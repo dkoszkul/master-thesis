@@ -14,6 +14,8 @@
 #include "sensors/obstacle.h"
 #include "simulation/signal.h"
 
+#include "algorithm/algorithm.h"
+
 using namespace std;
 
 class Simulation : public QObject
@@ -24,6 +26,8 @@ private:
     std::list<Receiver *> receivers;
     std::list<Obstacle *> obstacles;
 
+    Algorithm *algorithm;
+
     QwtPlot *plot;
     std::map<int,std::vector<double>> deltaTByReceiverNumber;
     std::map<int,std::vector<double>> timeByReceiverNumber;
@@ -31,8 +35,8 @@ private:
     bool allReceiversHaveSignals(bool* signalTable, int size);
     void detectZeroCrossings();
     bool arePatternTheSame(int* pattern, int* previousPattern, int size);
-    void exportComputedData();
-    
+    void plotPhaseShift();
+
 public:
     explicit Simulation(QObject *parent = 0);
     ~Simulation();
