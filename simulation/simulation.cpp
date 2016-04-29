@@ -176,11 +176,15 @@ void Simulation::detectZeroCrossings()
                     if((*r)->getReceiverNumber() == referenceReceiver){
                         doMeasurement = true;
                         referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
+                        std::cout<<" ";
+                        AlgorithmResult aResult = algorithm->findAngleByKValuesFor(deltaTByReceiverNumber[1].back(), deltaTByReceiverNumber[2].back());
+                        std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
                     }
                     // [.] measure the time if doMeasurement flag is raised
                     if(doMeasurement){
                         deltaTByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime);
                         timeByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS));
+                        std::cout<<"("<<receiverNumber<<","<<((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime)<<") ";
                     }
                 }
 

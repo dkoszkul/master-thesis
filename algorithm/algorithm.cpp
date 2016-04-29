@@ -1,5 +1,10 @@
 #include "algorithm.h"
 
+/*std::ostream& operator << (std::ostream&  Strm, Type4KSearchResult Val){
+    const char* Name[] = { "TK_good", "TK_ambiguous", "TK_none" };
+    return Strm << Name[Val];
+  }*/
+
 Algorithm::Algorithm(QObject *parent) : QObject(parent)
 {
 

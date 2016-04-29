@@ -29,6 +29,7 @@
 #define GAP_R1_R2_mm    4
 
 enum Type4KSearchResult {  TK_good, TK_ambiguous, TK_none };
+//std::ostream& operator << (std::ostream&  Strm, Type4KSearchResult Val);
 
 struct AlgorithmResult {
     Type4KSearchResult status;
@@ -44,7 +45,7 @@ class Algorithm : public QObject
 public:
     explicit Algorithm(QObject *parent = 0);
 
-    AlgorithmResult findAngleByKValuesFor(double timeDelay1, double timeDelay2, double epsilon=0.3);
+    AlgorithmResult findAngleByKValuesFor(double timeDelay1, double timeDelay2, double epsilon=0.7);
 
 private:
     int *distanceBetweenReceiversInMm; //not used yet
