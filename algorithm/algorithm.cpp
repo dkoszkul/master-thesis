@@ -25,7 +25,6 @@ AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2D
           if (!CheckK_4_RecData(r0R1DistanceInMm+r1R2DistanceInMm,timeDelay2,K2_Idx,AngleSin2)) continue;
           if (fabs(AngleSin1-AngleSin2) >= epsilon) continue;
           if (K1_res != K_EMPTY_INDEX) {
-
             cout << ":)  Ambiguous solution found." << endl
              << "       1.  k1 = " << K1_res << "  k2 = " << K2_res << endl
              << "       2.  k1 = " << K1_Idx << "  k2 = " << K2_Idx << endl
