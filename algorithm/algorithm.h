@@ -15,18 +15,6 @@
 #define RAD2DEG( x )  ((x)*180/M_PI)
 #define K_MIN   -4
 #define K_MAX    4
-/*!
- * \brief A gap between a receiver R0 and R1
- *
- * A gap between a receiver R0 and R1. It is expressed in millimeters.
- */
-#define GAP_R0_R1_mm    4
-/*!
- * \brief A gap between a receiver R1 and R2
- *
- * A gap between a receiver R1 and R2. It is expressed in millimeters.
- */
-#define GAP_R1_R2_mm    11
 
 enum Type4KSearchResult {  TK_good, TK_ambiguous, TK_none };
 //std::ostream& operator << (std::ostream&  Strm, Type4KSearchResult Val);

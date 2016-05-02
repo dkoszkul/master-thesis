@@ -137,9 +137,10 @@ void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime)
 {
     double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),25.0);
     double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),25.0);
+    int r0R1DistanceInMm = receivers.at(1)->getPositionY() - receivers.at(0)->getPositionY();
+    int r1R2DistanceInMm = receivers.at(2)->getPositionY() - receivers.at(1)->getPositionY();
 
-
-    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(4,11,Receiver1deltaT, Receiver2deltaT);
+    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT);
     Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
     algorithmResultsToPlot.push_back(point);
 
