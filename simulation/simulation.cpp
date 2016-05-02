@@ -174,11 +174,18 @@ void Simulation::detectZeroCrossings()
                 if(previousProbes[receiverNumber] < 0 && actualProbeValue > 0){
                     // [.] raise doMeasurement flag if zero-crossing belongs to the reference signal
                     if((*r)->getReceiverNumber() == referenceReceiver){
+
+                        double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),25.0);
+                        double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),25.0);
+                        AlgorithmResult aResult = algorithm->findAngleByKValuesFor(Receiver1deltaT, Receiver2deltaT);
+                        Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
+                        algorithmResultsToPlot.push_back(point);
+                        std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
+                        std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
+
                         doMeasurement = true;
                         referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
                         std::cout<<" ";
-                        AlgorithmResult aResult = algorithm->findAngleByKValuesFor(deltaTByReceiverNumber[1].back(), deltaTByReceiverNumber[2].back());
-                        std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
                     }
                     // [.] measure the time if doMeasurement flag is raised
                     if(doMeasurement){
@@ -193,7 +200,7 @@ void Simulation::detectZeroCrossings()
 
             }else{
                 deltaTByReceiverNumber[receiverNumber].push_back(0);
-                timeByReceiverNumber[receiverNumber].push_back(uS);
+                timeByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS));
             }
             receiverNumber++;
         }

@@ -12,6 +12,7 @@ Algorithm::Algorithm(QObject *parent) : QObject(parent)
 
 AlgorithmResult Algorithm::findAngleByKValuesFor(double timeDelay1, double timeDelay2, double epsilon)
 {
+    std::cout<<std::endl<<"I have "<<timeDelay1<<" and "<<timeDelay2<<std::endl;
     AlgorithmResult result;
 
     int  K1_Idx, K2_Idx;
@@ -30,9 +31,9 @@ AlgorithmResult Algorithm::findAngleByKValuesFor(double timeDelay1, double timeD
              << "       2.  k1 = " << K1_Idx << "  k2 = " << K2_Idx << endl
              << endl;
 
-
             return result;
           }
+
           K1_res = K1_Idx;  K2_res = K2_Idx;
           //      cout << " ***   K1: " << K1_res << "    K2: " << K2_res << endl;
           result.angle = RAD2DEG(asin((AngleSin1+AngleSin2)/2));
@@ -60,5 +61,17 @@ bool Algorithm::CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki,double 
     if (fabs(Part_Upper) > fabs(Base)) return false;
     AngleSin = Part_Upper/Base;
     return true;
+}
+
+double Algorithm::correctTime( double Delta_T_us, double T_period_us)
+{
+  if (Delta_T_us < 0) {
+    while ((Delta_T_us += T_period_us) < 0) {}
+    return Delta_T_us;
+  }
+  if (Delta_T_us > T_period_us) {
+    while ((Delta_T_us -= T_period_us) > T_period_us) {}
+  }
+  return Delta_T_us;
 }
 

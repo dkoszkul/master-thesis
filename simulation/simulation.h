@@ -16,6 +16,8 @@
 
 #include "algorithm/algorithm.h"
 
+#include "simulation/point.h"
+
 using namespace std;
 
 class Simulation : public QObject
@@ -31,6 +33,7 @@ private:
     QwtPlot *plot;
     std::map<int,std::vector<double>> deltaTByReceiverNumber;
     std::map<int,std::vector<double>> timeByReceiverNumber;
+    std::list<Point *> algorithmResultsToPlot;
 
     bool allReceiversHaveSignals(bool* signalTable, int size);
     void detectZeroCrossings();
