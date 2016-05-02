@@ -16,7 +16,6 @@ LIBS+=-L/usr/local/qwt-6.1.2/lib -lqwt
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    paintwidget.cpp \
     console/console.cpp \
     console/settingsdialog.cpp \
     simulation/signal.cpp \
@@ -30,7 +29,6 @@ SOURCES += main.cpp\
     simulation/point.cpp
 
 HEADERS  += mainwindow.h \
-    paintwidget.h \
     constants.h \
     console/console.h \
     console/settingsdialog.h \

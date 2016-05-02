@@ -13,7 +13,6 @@
 #include "simulation/signal.h"
 #include "simulation/simulation.h"
 
-#include "paintwidget.h"
 #include "console/settingsdialog.h"
 #include "matlab/matlabexporter.h"
 
