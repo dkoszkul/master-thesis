@@ -24,6 +24,7 @@
 #include <qwt_plot_curve.h>
 #include <qwt_plot_marker.h>
 #include <qwt_point_data.h>
+#include <qwt_plot_grid.h>
 #include <QPixmap>
 #include <QImage>
 
@@ -77,8 +78,10 @@ private:
     MatlabExporter *matlabExporter;
 
     void setupSimulationTab();
+    void setupAlgorithmResultTab();
 
     QwtPlot* plot;
+    QwtPlot *resultPlot;
     void processLine(QString line);
 };
 

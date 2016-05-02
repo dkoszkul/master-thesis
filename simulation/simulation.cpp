@@ -180,6 +180,13 @@ void Simulation::detectZeroCrossings()
                         AlgorithmResult aResult = algorithm->findAngleByKValuesFor(Receiver1deltaT, Receiver2deltaT);
                         Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
                         algorithmResultsToPlot.push_back(point);
+
+                        QwtPlotMarker* m = new QwtPlotMarker();
+                        m->setSymbol(new QwtSymbol( QwtSymbol::Diamond, Qt::red, Qt::NoPen, QSize( 10, 10 ) ) );
+                        m->setValue( QPointF( point->getX(), point->getY() ) );
+                        m->attach( resultPlot );
+                        resultPlot->replot();
+
                         std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
                         std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
 
@@ -255,4 +262,9 @@ std::list<Receiver *> &Simulation::getReceivers()
 Object *Simulation::getEmitter() const
 {
     return emitter;
+}
+
+void Simulation::setResultPlot(QwtPlot *value)
+{
+    resultPlot = value;
 }

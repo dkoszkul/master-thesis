@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     matlabExporter->setSimulation(simulation);
 
     initActionsConnections();
+    setupAlgorithmResultTab();
 
     ui->simulate->setEnabled(false);
     ui->save->setEnabled(false);
@@ -137,6 +138,12 @@ void MainWindow::handleClearButton()
     }
     layout->addItem(new QSpacerItem(0,0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
+    resultPlot->detachItems();
+    QwtPlotGrid *grid = new QwtPlotGrid();
+    grid->attach( resultPlot );
+    resultPlot->replot();
+
+
     ui->load->setEnabled(true);
     ui->simulate->setEnabled(false);
     ui->save->setEnabled(false);
@@ -214,6 +221,18 @@ void MainWindow::setupSimulationTab()
 
     simulation->setPlot(plot);
 
+}
+
+void MainWindow::setupAlgorithmResultTab()
+{
+    resultPlot = new QwtPlot;
+    resultPlot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    resultPlot->setAxisScale( plot->yLeft, -45.0, 45.0);
+
+    QwtPlotGrid *grid = new QwtPlotGrid();
+    grid->attach( resultPlot );
+    simulation->setResultPlot(resultPlot);
+    ui->resultVerticalLayout->addWidget(resultPlot);
 }
 
 void MainWindow::createXAxisLine(QwtPlot* plot)

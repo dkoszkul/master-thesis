@@ -18,6 +18,10 @@
 
 #include "simulation/point.h"
 
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
+
+
 using namespace std;
 
 class Simulation : public QObject
@@ -31,6 +35,8 @@ private:
     Algorithm *algorithm;
 
     QwtPlot *plot;
+    QwtPlot *resultPlot;
+
     std::map<int,std::vector<double>> deltaTByReceiverNumber;
     std::map<int,std::vector<double>> timeByReceiverNumber;
     std::list<Point *> algorithmResultsToPlot;
@@ -53,6 +59,8 @@ public:
     std::list<Obstacle *> &getObstacles();
     std::list<Receiver *> &getReceivers();
     Object *getEmitter() const;
+
+    void setResultPlot(QwtPlot *value);
 
 public slots:
     void simulate();
