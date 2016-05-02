@@ -10,7 +10,7 @@ Algorithm::Algorithm(QObject *parent) : QObject(parent)
 
 }
 
-AlgorithmResult Algorithm::findAngleByKValuesFor(double timeDelay1, double timeDelay2, double epsilon)
+AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2, double epsilon)
 {
     std::cout<<std::endl<<"I have "<<timeDelay1<<" and "<<timeDelay2<<std::endl;
     AlgorithmResult result;
@@ -20,9 +20,9 @@ AlgorithmResult Algorithm::findAngleByKValuesFor(double timeDelay1, double timeD
     double  AngleSin1, AngleSin2;
 
     for (K1_Idx = K_MIN; K1_Idx <= K_MAX; ++K1_Idx) {
-        if (!CheckK_4_RecData(GAP_R0_R1_mm,timeDelay1,K1_Idx,AngleSin1)) continue;
+        if (!CheckK_4_RecData(r0R1DistanceInMm,timeDelay1,K1_Idx,AngleSin1)) continue;
         for  (K2_Idx = K_MIN; K2_Idx <= K_MAX; ++K2_Idx) {
-          if (!CheckK_4_RecData(GAP_R0_R1_mm+GAP_R1_R2_mm,timeDelay2,K2_Idx,AngleSin2)) continue;
+          if (!CheckK_4_RecData(r0R1DistanceInMm+r1R2DistanceInMm,timeDelay2,K2_Idx,AngleSin2)) continue;
           if (fabs(AngleSin1-AngleSin2) >= epsilon) continue;
           if (K1_res != K_EMPTY_INDEX) {
 

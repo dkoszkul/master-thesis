@@ -15,12 +15,12 @@ void Simulation::setEmitter(Object *emitter)
     this->emitter=emitter;
 }
 
-void Simulation::setReceivers(const std::list<Receiver*> &receivers)
+void Simulation::setReceivers(const std::vector<Receiver*> &receivers)
 {
     this->receivers=receivers;
 }
 
-void Simulation::setObstacles(const std::list<Obstacle*> &obstacles)
+void Simulation::setObstacles(const std::vector<Obstacle*> &obstacles)
 {
     this->obstacles=obstacles;
 }
@@ -133,6 +133,26 @@ void Simulation::plotPhaseShift()
     }
 }
 
+void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime)
+{
+    double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),25.0);
+    double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),25.0);
+
+
+    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(4,11,Receiver1deltaT, Receiver2deltaT);
+    Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
+    algorithmResultsToPlot.push_back(point);
+
+    QwtPlotMarker* m = new QwtPlotMarker();
+    m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 ) ) );
+    m->setValue( QPointF( point->getX(), point->getY() ) );
+    m->attach( resultPlot );
+    resultPlot->replot();
+
+    std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
+    std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
+}
+
 void Simulation::detectZeroCrossings()
 {
     // [1] method showSignals() computes signal values in every time tick
@@ -175,20 +195,7 @@ void Simulation::detectZeroCrossings()
                     // [.] raise doMeasurement flag if zero-crossing belongs to the reference signal
                     if((*r)->getReceiverNumber() == referenceReceiver){
 
-                        double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),25.0);
-                        double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),25.0);
-                        AlgorithmResult aResult = algorithm->findAngleByKValuesFor(Receiver1deltaT, Receiver2deltaT);
-                        Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
-                        algorithmResultsToPlot.push_back(point);
-
-                        QwtPlotMarker* m = new QwtPlotMarker();
-                        m->setSymbol(new QwtSymbol( QwtSymbol::Diamond, Qt::red, Qt::NoPen, QSize( 10, 10 ) ) );
-                        m->setValue( QPointF( point->getX(), point->getY() ) );
-                        m->attach( resultPlot );
-                        resultPlot->replot();
-
-                        std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
-                        std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
+                        runTheAlgorithm(referenceReceiverZeroCrossTime);
 
                         doMeasurement = true;
                         referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
@@ -248,12 +255,12 @@ void Simulation::setPlot(QwtPlot *value)
     plot = value;
 }
 
-std::list<Obstacle *> &Simulation::getObstacles()
+std::vector<Obstacle *> &Simulation::getObstacles()
 {
     return this->obstacles;
 }
 
-std::list<Receiver *> &Simulation::getReceivers()
+std::vector<Receiver *> &Simulation::getReceivers()
 {
     return this->receivers;
 }

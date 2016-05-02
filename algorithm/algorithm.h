@@ -45,7 +45,7 @@ class Algorithm : public QObject
 public:
     explicit Algorithm(QObject *parent = 0);
 
-    AlgorithmResult findAngleByKValuesFor(double timeDelay1, double timeDelay2, double epsilon=0.3);
+    AlgorithmResult findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2, double epsilon=0.3);
     double correctTime( double Delta_T_us, double T_period_us);
 
 private:

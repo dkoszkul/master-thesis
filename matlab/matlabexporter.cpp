@@ -18,13 +18,13 @@ void MatlabExporter::exportResults(QString* filename){
         stream<<"hold on;"<<endl;
         stream<<"axis equal;"<<endl;
         stream<<endl<<"% Receivers positions"<<endl;
-        std::list<Receiver *> receivers = simulation->getReceivers();
+        std::vector<Receiver *> receivers = simulation->getReceivers();
         for(auto receiver = receivers.begin(); receiver != receivers.end();receiver++){
             stream<<"circle("<<(*receiver)->getPositionX()<<","<<(*receiver)->getPositionY()<<",1.5,'k');"<<endl;
         }
 
         stream<<endl<<"% Obstacle positions"<<endl;
-        std::list<Obstacle *> obstacles = simulation->getObstacles();
+        std::vector<Obstacle *> obstacles = simulation->getObstacles();
         for(auto obstacle = obstacles.begin(); obstacle != obstacles.end();obstacle++){
             stream<<"plot("<<(*obstacle)->getPositionX()<<","<<(*obstacle)->getPositionY()<<",'x','MarkerSize',18);"<<endl;
         }

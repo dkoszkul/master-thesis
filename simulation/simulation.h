@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include <map>
+#include <vector>
 #include <QObject>
 #include <QString>
 #include <QFile>
@@ -29,8 +30,8 @@ class Simulation : public QObject
     Q_OBJECT
 private:
     Object *emitter;
-    std::list<Receiver *> receivers;
-    std::list<Obstacle *> obstacles;
+    std::vector<Receiver *> receivers;
+    std::vector<Obstacle *> obstacles;
 
     Algorithm *algorithm;
 
@@ -39,25 +40,27 @@ private:
 
     std::map<int,std::vector<double>> deltaTByReceiverNumber;
     std::map<int,std::vector<double>> timeByReceiverNumber;
-    std::list<Point *> algorithmResultsToPlot;
+    std::vector<Point *> algorithmResultsToPlot;
 
     bool allReceiversHaveSignals(bool* signalTable, int size);
     void detectZeroCrossings();
     bool arePatternTheSame(int* pattern, int* previousPattern, int size);
     void plotPhaseShift();
 
+    void runTheAlgorithm(int referenceReceiverZeroCrossTime);
+
 public:
     explicit Simulation(QObject *parent = 0);
     ~Simulation();
 
     void setEmitter(Object* emitter);
-    void setReceivers(const std::list<Receiver*> &receivers);
-    void setObstacles(const std::list<Obstacle*> &obstacles);
+    void setReceivers(const std::vector<Receiver*> &receivers);
+    void setObstacles(const std::vector<Obstacle*> &obstacles);
     std::map<int, std::vector<double> > getDeltaTByReceiverNumber() const;
     std::map<int, std::vector<double> > getTimeByReceiverNumber() const;
     void setPlot(QwtPlot *value);
-    std::list<Obstacle *> &getObstacles();
-    std::list<Receiver *> &getReceivers();
+    std::vector<Obstacle *> &getObstacles();
+    std::vector<Receiver *> &getReceivers();
     Object *getEmitter() const;
 
     void setResultPlot(QwtPlot *value);
