@@ -12,7 +12,7 @@ Algorithm::Algorithm(QObject *parent) : QObject(parent)
 
 AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2, double epsilon)
 {
-    std::cout<<std::endl<<"I have "<<timeDelay1<<" and "<<timeDelay2<<std::endl;
+    std::cout<<std::endl<<"I have "<<timeDelay1<<" and "<<timeDelay2<<" and distances: "<<r0R1DistanceInMm<<" , "<<r1R2DistanceInMm<< std::endl;
     AlgorithmResult result;
 
     int  K1_Idx, K2_Idx;

@@ -121,39 +121,6 @@ bool Simulation::allReceiversHaveSignals(bool *signalTable, int size)
     return true;
 }
 
-void Simulation::plotPhaseShift()
-{
-    for(unsigned int i=0;i<receivers.size();i++){
-        QwtPlotCurve* signalPlot = new QwtPlotCurve( "delta T" );
-        signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
-        signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
-        signalPlot->setPen( Qt::red );
-        signalPlot->attach( plot );
-        signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
-    }
-}
-
-void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime)
-{
-    double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),25.0);
-    double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),25.0);
-    int r0R1DistanceInMm = receivers.at(1)->getPositionY() - receivers.at(0)->getPositionY();
-    int r1R2DistanceInMm = receivers.at(2)->getPositionY() - receivers.at(1)->getPositionY();
-
-    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT);
-    Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
-    algorithmResultsToPlot.push_back(point);
-
-    QwtPlotMarker* m = new QwtPlotMarker();
-    m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 ) ) );
-    m->setValue( QPointF( point->getX(), point->getY() ) );
-    m->attach( resultPlot );
-    resultPlot->replot();
-
-    std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
-    std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
-}
-
 void Simulation::detectZeroCrossings()
 {
     // [1] method showSignals() computes signal values in every time tick
@@ -200,7 +167,7 @@ void Simulation::detectZeroCrossings()
 
                         doMeasurement = true;
                         referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
-                        std::cout<<" ";
+                        std::cout<<" ---------------";
                     }
                     // [.] measure the time if doMeasurement flag is raised
                     if(doMeasurement){
@@ -229,6 +196,39 @@ void Simulation::detectZeroCrossings()
     /**********************************/
     delete[] hasSignal;
     delete[] previousProbes;
+}
+
+void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime)
+{
+    double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),25.0); //This is unnecessary in sumulation but in future it may be useful
+    double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),25.0); //This is unnecessary in sumulation but in future it may be useful
+    int r0R1DistanceInMm = receivers.at(1)->getPositionY() - receivers.at(0)->getPositionY();
+    int r1R2DistanceInMm = receivers.at(2)->getPositionY() - receivers.at(1)->getPositionY();
+
+    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT);
+    Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
+    algorithmResultsToPlot.push_back(point);
+
+    QwtPlotMarker* m = new QwtPlotMarker();
+    m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 ) ) );
+    m->setValue( QPointF( point->getX(), point->getY() ) );
+    m->attach( resultPlot );
+    resultPlot->replot();
+
+    std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
+    std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
+}
+
+void Simulation::plotPhaseShift()
+{
+    for(unsigned int i=0;i<receivers.size();i++){
+        QwtPlotCurve* signalPlot = new QwtPlotCurve( "delta T" );
+        signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+        signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+        signalPlot->setPen( Qt::red );
+        signalPlot->attach( plot );
+        signalPlot->setSamples(timeByReceiverNumber[i].data(),deltaTByReceiverNumber[i].data(),deltaTByReceiverNumber[i].size());
+    }
 }
 
 bool Simulation::arePatternTheSame(int *pattern, int *previousPattern, int size)

@@ -227,7 +227,7 @@ void MainWindow::setupAlgorithmResultTab()
 {
     resultPlot = new QwtPlot;
     resultPlot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
-    resultPlot->setAxisScale( plot->yLeft, -45.0, 45.0);
+    resultPlot->setAxisScale( plot->yLeft, -90.0, 90.0);
     resultPlot->setAxisTitle(plot->yLeft,"angle [degree]");
     resultPlot->setAxisTitle(plot->xBottom,"time [us]");
     QwtPlotGrid *grid = new QwtPlotGrid();
