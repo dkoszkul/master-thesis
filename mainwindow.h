@@ -64,8 +64,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Simulation* simulation;
-    Signal* signal;
+    Simulation *simulation;
+    Signal *signal;
+    Algorithm *algorithm;
 
     void initActionsConnections();
     void showStatusMessage(const QString &message);

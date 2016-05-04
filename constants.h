@@ -20,4 +20,6 @@
 #define K_MIN   -4
 #define K_MAX    4
 
+#define COMMENT_SIGN "#"
+
 #endif // CONSTANTS_H

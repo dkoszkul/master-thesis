@@ -12,6 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     status = new QLabel;
     settings = new SettingsDialog;
     matlabExporter = new MatlabExporter;
+    algorithm = new Algorithm;
+    algorithm->setMainWindow(this);
 
     ui->setupUi(this);
 
@@ -179,6 +181,7 @@ void MainWindow::initActionsConnections()
     connect(ui->load, SIGNAL(clicked()), this, SLOT(openAndLoadConfiguration()));
     connect(ui->clear, SIGNAL(clicked()), this, SLOT(handleClearButton()));
     connect(ui->save, SIGNAL(clicked()), this, SLOT(handleSave()));
+    connect(ui->loadRealResultsButton, SIGNAL(clicked()), algorithm, SLOT(handleRealResults()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)

@@ -74,3 +74,30 @@ double Algorithm::correctTime( double Delta_T_us, double T_period_us)
   return Delta_T_us;
 }
 
+void Algorithm::setMainWindow(QWidget *value)
+{
+    mainWindow = value;
+}
+
+void Algorithm::handleRealResults()
+{
+    QString filename = QFileDialog::getOpenFileName(
+                mainWindow,
+                tr("Open file with results..."),
+                "",
+                "All files (*.*);;Text files (*.txt)"
+                );
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        return;
+    }
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine();
+        if(!line.startsWith(COMMENT_SIGN)){
+            std::cout<<line.toStdString()<<std::endl;
+        }
+        //processLine(line);
+    }
+}
+

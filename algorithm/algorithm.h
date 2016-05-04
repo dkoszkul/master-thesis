@@ -2,6 +2,11 @@
 #define ALGORITHM_H
 
 #include <QObject>
+#include <QString>
+#include <QFile>
+#include <QFileDialog>
+#include <QTextStream>
+#include <QWidget>
 
 #include <cmath>
 #include <iostream>
@@ -28,7 +33,11 @@ public:
     AlgorithmResult findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2, double epsilon=0.3);
     double correctTime( double Delta_T_us, double T_period_us);
 
+    void setMainWindow(QWidget *value);
+
 private:
+    QWidget *mainWindow;
+
     int *distanceBetweenReceiversInMm; //not used yet
 
     bool CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki,double &AngleSin);
@@ -37,6 +46,7 @@ private:
 signals:
 
 public slots:
+    void handleRealResults();
 
 };
 
