@@ -91,11 +91,15 @@ void Algorithm::handleRealResults()
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
         return;
     }
+
     QTextStream in(&file);
     while (!in.atEnd()) {
+        double T1_o_us, Delta_T2_o_us, Delta_T3_o_us, T_wave_us;
         QString line = in.readLine();
         if(!line.startsWith(COMMENT_SIGN)){
-            std::cout<<line.toStdString()<<std::endl;
+            std::stringstream ss(line.toStdString());
+            ss >> T1_o_us >> Delta_T2_o_us >> Delta_T3_o_us >> T_wave_us;
+            std::cout<< T1_o_us << " "<< T_wave_us<<std::endl;
         }
         //processLine(line);
     }
