@@ -231,16 +231,6 @@ void Simulation::plotPhaseShift()
     }
 }
 
-bool Simulation::arePatternTheSame(int *pattern, int *previousPattern, int size)
-{
-    for(int index=0;index<size;index++){
-        if(pattern[index] != previousPattern[index]){
-            return false;
-        }
-    }
-    return true;
-}
-
 std::map<int, std::vector<double> > Simulation::getDeltaTByReceiverNumber() const
 {
     return deltaTByReceiverNumber;

@@ -1,0 +1,10 @@
+# In the first line, which is not a comment, is sensors arrangement
+# for example if sensors are like the following :
+# 	R0 -- 4mm -- R1 -- 11 mm -- R2
+# then the following line has to be uncommented : 
+4 11
+# Then all the next lines represent measurement results
+# in this case R0 time, R1 delay, R2 delay, Period of the signal in ms
+100 2 4 25
+106 2.1 4.1 25
+115 2 4 25

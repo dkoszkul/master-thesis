@@ -44,7 +44,6 @@ private:
 
     bool allReceiversHaveSignals(bool* signalTable, int size);
     void detectZeroCrossings();
-    bool arePatternTheSame(int* pattern, int* previousPattern, int size);
     void plotPhaseShift();
 
     void runTheAlgorithm(int referenceReceiverZeroCrossTime);

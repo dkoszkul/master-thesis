@@ -7,7 +7,7 @@
 
 Algorithm::Algorithm(QObject *parent) : QObject(parent)
 {
-
+ realMeasurement = new RealMeasurement;
 }
 
 AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2, double epsilon)
@@ -79,11 +79,16 @@ void Algorithm::setMainWindow(QWidget *value)
     mainWindow = value;
 }
 
+void Algorithm::setAlgorithmResultPlot(QwtPlot *value)
+{
+    algorithmResultPlot = value;
+}
+
 void Algorithm::handleRealResults()
 {
     QString filename = QFileDialog::getOpenFileName(
                 mainWindow,
-                tr("Open file with results..."),
+                tr("Open file with measurement results..."),
                 "",
                 "All files (*.*);;Text files (*.txt)"
                 );
@@ -91,17 +96,36 @@ void Algorithm::handleRealResults()
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
         return;
     }
+    bool isFirstLine = true;
 
     QTextStream in(&file);
     while (!in.atEnd()) {
-        double T1_o_us, Delta_T2_o_us, Delta_T3_o_us, T_wave_us;
         QString line = in.readLine();
         if(!line.startsWith(COMMENT_SIGN)){
             std::stringstream ss(line.toStdString());
-            ss >> T1_o_us >> Delta_T2_o_us >> Delta_T3_o_us >> T_wave_us;
-            std::cout<< T1_o_us << " "<< T_wave_us<<std::endl;
+            if(isFirstLine){
+                ss >> realMeasurement->R0R1InMm >> realMeasurement->R1R2InMm;
+                isFirstLine = false;
+            }else{
+                double T1_o_us, Delta_T2_o_us, Delta_T3_o_us, T_wave_us;
+                ss >> T1_o_us >> Delta_T2_o_us >> Delta_T3_o_us >> T_wave_us;
+                realMeasurement->R0Times.push_back(T1_o_us);
+                realMeasurement->R1Times.push_back(Delta_T2_o_us);
+                realMeasurement->R2Times.push_back(Delta_T3_o_us);
+                realMeasurement->TWaves.push_back(T_wave_us);
+            }
         }
-        //processLine(line);
     }
+
+    for(unsigned int i=0; i< realMeasurement->R0Times.size(); i++){
+        AlgorithmResult aResult = findAngleByKValuesFor(realMeasurement->R0R1InMm,realMeasurement->R1R2InMm,realMeasurement->R1Times.at(i), realMeasurement->R2Times.at(i));
+
+        QwtPlotMarker* m = new QwtPlotMarker();
+        m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 )));
+        m->setValue( QPointF( realMeasurement->R0Times.at(i), aResult.angle ));
+        m->attach( resultPlot );
+
+    }
+    algorithmResultPlot->replot();
 }
 

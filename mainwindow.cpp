@@ -239,6 +239,8 @@ void MainWindow::setupAlgorithmResultTab()
 
 
     simulation->setResultPlot(resultPlot);
+    algorithm->setAlgorithmResultPlot(resultPlot);
+
     ui->resultVerticalLayout->addWidget(resultPlot);
 }
 

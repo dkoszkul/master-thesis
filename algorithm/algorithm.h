@@ -23,6 +23,15 @@ struct AlgorithmResult {
     double distance;
 };
 
+struct RealMeasurement {
+    int R0R1InMm;
+    int R1R2InMm;
+    std::vector<double> R0Times;
+    std::vector<double> R1Times;
+    std::vector<double> R2Times;
+    std::vector<double> TWaves;
+};
+
 using namespace std;
 
 class Algorithm : public QObject
@@ -35,9 +44,12 @@ public:
     double correctTime( double Delta_T_us, double T_period_us);
 
     void setMainWindow(QWidget *value);
+    void setAlgorithmResultPlot(QwtPlot *value);
 
 private:
     QWidget *mainWindow;
+    RealMeasurement *realMeasurement;
+    QwtPlot *algorithmResultPlot;
 
     int *distanceBetweenReceiversInMm; //not used yet
 
