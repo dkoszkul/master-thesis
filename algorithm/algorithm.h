@@ -7,10 +7,15 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QWidget>
+#include <QTabWidget>
 
 #include <cmath>
 #include <iostream>
 #include <sstream>
+
+#include <qwt_plot.h>
+#include <qwt_plot_marker.h>
+#include <qwt_symbol.h>
 
 #include "constants.h"
 

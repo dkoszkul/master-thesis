@@ -123,9 +123,11 @@ void Algorithm::handleRealResults()
         QwtPlotMarker* m = new QwtPlotMarker();
         m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 )));
         m->setValue( QPointF( realMeasurement->R0Times.at(i), aResult.angle ));
-        m->attach( resultPlot );
+        m->attach( algorithmResultPlot );
 
     }
     algorithmResultPlot->replot();
+    QTabWidget *tabWidget = mainWindow->findChild<QTabWidget*>("tabWidget");
+    tabWidget->setCurrentIndex(tabWidget->currentIndex()  + 1 ) ;
 }
 
