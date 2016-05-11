@@ -123,11 +123,37 @@ void Algorithm::handleRealResults()
         QwtPlotMarker* m = new QwtPlotMarker();
         m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 )));
         m->setValue( QPointF( realMeasurement->R0Times.at(i), aResult.angle ));
+        resultPoints.push_back(new Point(realMeasurement->R0Times.at(i), aResult.angle ));
         m->attach( algorithmResultPlot );
 
     }
     algorithmResultPlot->replot();
     QTabWidget *tabWidget = mainWindow->findChild<QTabWidget*>("tabWidget");
     tabWidget->setCurrentIndex(tabWidget->currentIndex()  + 1 ) ;
+}
+
+void Algorithm::exportAlgorithmResultsToMatlabScript()
+{
+    QString filename = QFileDialog::getSaveFileName(
+                mainWindow,
+                tr("Save simulation results..."),
+                "algorithmResult.m",
+                ".m"
+                );
+    if(!filename.contains((".m"))){
+        filename.append(".m");
+    }
+    QFile file(filename);
+    if (file.open(QIODevice::ReadWrite)) {
+        QTextStream stream(&file);
+        stream<<"figure()"<<endl;
+        stream<<"grid on;"<<endl;
+        stream<<"hold on;"<<endl;
+         for(auto point = resultPoints.begin(); point != resultPoints.end();point++){
+             stream<<"plot("<<(*point)->getX()<<","<<(*point)->getY()<<",'o','MarkerSize',12);"<<endl;
+         }
+    }
+    file.close();
+
 }
 

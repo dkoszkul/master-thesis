@@ -163,6 +163,12 @@ void MainWindow::handleSave()
     matlabExporter->exportResults(&filename);
 }
 
+void MainWindow::handleExportAlgorithmResults()
+{
+
+    algorithm->exportAlgorithmResultsToMatlabScript();
+}
+
 
 void MainWindow::initActionsConnections()
 {
@@ -182,6 +188,7 @@ void MainWindow::initActionsConnections()
     connect(ui->clear, SIGNAL(clicked()), this, SLOT(handleClearButton()));
     connect(ui->save, SIGNAL(clicked()), this, SLOT(handleSave()));
     connect(ui->loadRealResultsButton, SIGNAL(clicked()), algorithm, SLOT(handleRealResults()));
+    connect(ui->saveAlgorithmResults, SIGNAL(clicked()),this, SLOT(handleExportAlgorithmResults()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)

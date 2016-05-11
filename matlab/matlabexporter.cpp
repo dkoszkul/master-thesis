@@ -2,7 +2,7 @@
 
 MatlabExporter::MatlabExporter(QObject *parent) : QObject(parent)
 {
-
+simulation = nullptr;
 }
 
 void MatlabExporter::exportResults(QString* filename){
@@ -82,6 +82,11 @@ void MatlabExporter::exportResults(QString* filename){
     }
     file.close();
 
+}
+
+void MatlabExporter::exportAlgorithmResultsToMatlabScript(std::vector<Point *> &points, QString *filename)
+{
+std::cout<<"dupa"<<std::endl;
 }
 
 void MatlabExporter::setSimulation(Simulation *value)

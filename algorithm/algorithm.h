@@ -12,12 +12,14 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include <qwt_plot.h>
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 
 #include "constants.h"
+#include "simulation/point.h"
 
 enum Type4KSearchResult {  TK_good, TK_ambiguous, TK_none };
 //std::ostream& operator << (std::ostream&  Strm, Type4KSearchResult Val);
@@ -50,6 +52,7 @@ public:
 
     void setMainWindow(QWidget *value);
     void setAlgorithmResultPlot(QwtPlot *value);
+    void exportAlgorithmResultsToMatlabScript();
 
 private:
     QWidget *mainWindow;
@@ -57,6 +60,7 @@ private:
     QwtPlot *algorithmResultPlot;
 
     int *distanceBetweenReceiversInMm; //not used yet
+    std::vector<Point *> resultPoints;
 
     bool CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki,double &AngleSin);
 

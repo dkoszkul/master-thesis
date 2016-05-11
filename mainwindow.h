@@ -61,6 +61,7 @@ private slots:
     void openAndLoadConfiguration();
     void handleClearButton();
     void handleSave();
+    void handleExportAlgorithmResults();
 
 private:
     Ui::MainWindow *ui;

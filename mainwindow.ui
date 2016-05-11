@@ -185,10 +185,36 @@
            </spacer>
           </item>
           <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Real</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="loadRealResultsButton">
             <property name="text">
              <string>Load real 
  results</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="saveAlgorithmResults">
+            <property name="text">
+             <string>Save 
+ algorithm 
+results</string>
             </property>
            </widget>
           </item>

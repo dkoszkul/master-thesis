@@ -28,6 +28,8 @@ public:
     void setSimulation(Simulation *value);
     void exportResults(QString *filename);
 
+    void exportAlgorithmResultsToMatlabScript(std::vector<Point *> &points, QString *filename);
+
 private:
     Simulation* simulation;
 
