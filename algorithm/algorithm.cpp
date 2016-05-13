@@ -10,7 +10,7 @@ Algorithm::Algorithm(QObject *parent) : QObject(parent)
  realMeasurement = new RealMeasurement;
 }
 
-AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2, double epsilon)
+AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2,double frequency, double epsilon)
 {
     std::cout<<std::endl<<"I have "<<timeDelay1<<" and "<<timeDelay2<<" and distances: "<<r0R1DistanceInMm<<" , "<<r1R2DistanceInMm<< std::endl;
     AlgorithmResult result;
@@ -20,9 +20,9 @@ AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2D
     double  AngleSin1, AngleSin2;
 
     for (K1_Idx = K_MIN; K1_Idx <= K_MAX; ++K1_Idx) {
-        if (!CheckK_4_RecData(r0R1DistanceInMm,timeDelay1,K1_Idx,AngleSin1)) continue;
+        if (!CheckK_4_RecData(r0R1DistanceInMm,timeDelay1,K1_Idx,frequency, AngleSin1)) continue;
         for  (K2_Idx = K_MIN; K2_Idx <= K_MAX; ++K2_Idx) {
-          if (!CheckK_4_RecData(r0R1DistanceInMm+r1R2DistanceInMm,timeDelay2,K2_Idx,AngleSin2)) continue;
+          if (!CheckK_4_RecData(r0R1DistanceInMm+r1R2DistanceInMm,timeDelay2,K2_Idx,frequency, AngleSin2)) continue;
           if (fabs(AngleSin1-AngleSin2) >= epsilon) continue;
           if (K1_res != K_EMPTY_INDEX) {
             cout << ":)  Ambiguous solution found." << endl
@@ -50,11 +50,11 @@ AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2D
 /*!
  * A value for angle determination is computed
  */
-bool Algorithm::CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki,double &AngleSin)
+bool Algorithm::CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki, double frequency,double &AngleSin)
 {
     double  Part_Upper =
             URS__ULTRASONIC_WAVE_SPEED_mmUS*DTime_us
-            + Ki*URS__ULTRASONIC_WAVELENGTH__mm;
+            + Ki*(URS__ULTRASONIC_WAVE_SPEED__mmS/( pow(10,6)/frequency));
     double  Base = Gap_R_mm;  // It can be < 0.
 
     if (fabs(Part_Upper) > fabs(Base)) return false;
@@ -118,7 +118,7 @@ void Algorithm::handleRealResults()
     }
 
     for(unsigned int i=0; i< realMeasurement->R0Times.size(); i++){
-        AlgorithmResult aResult = findAngleByKValuesFor(realMeasurement->R0R1InMm,realMeasurement->R1R2InMm,realMeasurement->R1Times.at(i), realMeasurement->R2Times.at(i));
+        AlgorithmResult aResult = findAngleByKValuesFor(realMeasurement->R0R1InMm,realMeasurement->R1R2InMm,realMeasurement->R1Times.at(i),realMeasurement->TWaves.at(i), realMeasurement->R2Times.at(i));
 
         QwtPlotMarker* m = new QwtPlotMarker();
         m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 )));

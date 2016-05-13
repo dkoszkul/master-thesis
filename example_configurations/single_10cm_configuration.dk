@@ -1,6 +1,6 @@
 emitter 0 0
 receiver 0 0 0
-receiver 1 0 11
+receiver 1 0 4
 receiver 2 0 15
-obstacle 100 0
+obstacle 100 40
 

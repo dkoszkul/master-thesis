@@ -46,7 +46,7 @@ private:
     void detectZeroCrossings();
     void plotPhaseShift();
 
-    void runTheAlgorithm(int referenceReceiverZeroCrossTime);
+    void runTheAlgorithm(int referenceReceiverZeroCrossTime, double signalFrequency);
 
 public:
     explicit Simulation(QObject *parent = 0);
