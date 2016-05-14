@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     serial = new QSerialPort(this);
     status = new QLabel;
     settings = new SettingsDialog;
+    simSettingsDialog = new SimSettingsDialog;
     matlabExporter = new MatlabExporter;
     algorithm = new Algorithm;
     algorithm->setMainWindow(this);
@@ -190,6 +191,8 @@ void MainWindow::initActionsConnections()
     connect(ui->save, SIGNAL(clicked()), this, SLOT(handleSave()));
     connect(ui->loadRealResultsButton, SIGNAL(clicked()), algorithm, SLOT(handleRealResults()));
     connect(ui->saveAlgorithmResults, SIGNAL(clicked()),this, SLOT(handleExportAlgorithmResults()));
+
+    connect(ui->settingsButton, SIGNAL(clicked()), simSettingsDialog, SLOT(show()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)

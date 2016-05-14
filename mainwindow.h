@@ -9,6 +9,8 @@
 #include <QtSerialPort/QSerialPort>
 #include <QFileDialog>
 
+#include "simsettingsdialog.h"
+
 #include "console/console.h"
 #include "simulation/signal.h"
 #include "simulation/simulation.h"
@@ -76,6 +78,7 @@ private:
     Console *console;
     QSerialPort *serial;
     SettingsDialog *settings;
+    SimSettingsDialog *simSettingsDialog;
     MatlabExporter *matlabExporter;
 
     void setupSimulationTab();

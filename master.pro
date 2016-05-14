@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     sensors/object.cpp \
     matlab/matlabexporter.cpp \
     algorithm/algorithm.cpp \
-    simulation/point.cpp
+    simulation/point.cpp \
+    simsettingsdialog.cpp
 
 HEADERS  += mainwindow.h \
     constants.h \
@@ -40,8 +41,10 @@ HEADERS  += mainwindow.h \
     sensors/emitter.h \
     matlab/matlabexporter.h \
     algorithm/algorithm.h \
-    simulation/point.h
+    simulation/point.h \
+    simsettingsdialog.h
 
 FORMS    += mainwindow.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    simsettingsdialog.ui
 CONFIG += c++11
