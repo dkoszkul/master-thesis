@@ -116,6 +116,7 @@ void MainWindow::openAndLoadConfiguration()
     }
 
     setupSimulationTab();
+    setupSceneViewTab();
 
     ui->load->setEnabled(false);
     ui->simulate->setEnabled(true);
@@ -251,11 +252,76 @@ void MainWindow::setupAlgorithmResultTab()
     ui->resultVerticalLayout->addWidget(resultPlot);
 }
 
+void MainWindow::setupSceneViewTab()
+{
+    scene = new QwtPlot;
+    int xMin=0, xMax=0, yMin=0, yMax=0;
+
+    xMin = xMax = simulation->getEmitter()->getPositionX();
+    yMin = yMax = simulation->getEmitter()->getPositionY();
+
+    QwtPlotMarker* m = new QwtPlotMarker();
+    m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::black, Qt::NoPen, QSize( 10, 10 ) ) );
+    m->setValue( QPointF( simulation->getEmitter()->getPositionX(), simulation->getEmitter()->getPositionY()) );
+    m->attach( scene );
+
+    for(auto r=simulation->getReceivers().begin();r!=simulation->getReceivers().end();r++){
+        int receiverX = (*r)->getPositionX();
+        int receiverY = (*r)->getPositionY();
+        if(receiverX<xMin){
+            xMin = receiverX;
+        }else if(receiverX > xMax){
+            xMax = receiverX;
+        }
+
+        if(receiverY<yMin){
+            yMin = receiverY;
+        }else if(receiverY > yMax){
+            yMax = receiverY;
+        }
+        QwtPlotMarker* m = new QwtPlotMarker();
+        m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::blue, Qt::NoPen, QSize( 30, 30 ) ) );
+        m->setValue( QPointF( receiverX, receiverY ) );
+        m->attach( scene );
+    }
+
+    for(auto r=simulation->getObstacles().begin();r!=simulation->getObstacles().end();r++){
+        int receiverX = (*r)->getPositionX();
+        int receiverY = (*r)->getPositionY();
+        if(receiverX<xMin){
+            xMin = receiverX;
+        }else if(receiverX > xMax){
+            xMax = receiverX;
+        }
+
+        if(receiverY<yMin){
+            yMin = receiverY;
+        }else if(receiverY > yMax){
+            yMax = receiverY;
+        }
+        QwtPlotMarker* m = new QwtPlotMarker();
+        m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::black, Qt::NoPen, QSize( 30, 30 ) ) );
+        m->setValue( QPointF( receiverX, receiverY ) );
+        m->attach( scene );
+    }
+
+    scene->setAxisScale( plot->xBottom, xMin-15, xMax+15);
+    scene->setAxisScale( plot->yLeft, yMin-15, yMax+15);
+    scene->setAxisTitle(plot->yLeft,"Y distance [mm]");
+    scene->setAxisTitle(plot->xBottom,"X distance [mm]");
+    QwtPlotGrid *grid = new QwtPlotGrid();
+    grid->attach( scene );
+    grid->setPen(QPen(Qt::gray));
+
+    ui->sceneVerticalLayout->addWidget(scene);
+}
+
 void MainWindow::createXAxisLine(QwtPlot* plot)
 {
     QwtPlotMarker *mY = new QwtPlotMarker();
     mY->setLabelAlignment( Qt::AlignRight | Qt::AlignTop );
     mY->setLineStyle( QwtPlotMarker::HLine );
+    mY->setLinePen(QPen(Qt::gray));
     mY->setYValue( 0.0 );
     mY->attach( plot );
 }

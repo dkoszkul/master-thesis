@@ -80,9 +80,11 @@ private:
 
     void setupSimulationTab();
     void setupAlgorithmResultTab();
+    void setupSceneViewTab();
 
     QwtPlot* plot;
     QwtPlot *resultPlot;
+    QwtPlot *scene;
     void processLine(QString line);
 };
 

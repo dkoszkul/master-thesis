@@ -191,6 +191,19 @@ double  previousZeroCrossingUs = 0;
         }
     }
 
+    QwtPlotCurve* signalPlot = new QwtPlotCurve( "" );
+    signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+    signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    signalPlot->setPen( Qt::blue );
+    signalPlot->attach( resultPlot );
+    std::vector<double> x;
+    std::vector<double> y;
+    for(auto r=algorithmResultsToPlot.begin();r!=algorithmResultsToPlot.end();r++){
+        x.push_back((*r)->getX());
+        y.push_back((*r)->getY());
+    }
+    signalPlot->setSamples(x.data(),y.data(),x.size());
+
     plotPhaseShift();
     plot->replot();
 

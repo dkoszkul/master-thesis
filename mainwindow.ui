@@ -259,6 +259,16 @@ results</string>
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="scene">
+       <attribute name="title">
+        <string>Scene view</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <layout class="QVBoxLayout" name="sceneVerticalLayout"/>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
