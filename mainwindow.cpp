@@ -29,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     matlabExporter->setSimulation(simulation);
 
     initActionsConnections();
-    setupAlgorithmResultTab();
 
     ui->simulate->setEnabled(false);
     ui->save->setEnabled(false);
     ui->clear->setEnabled(false);
+    ui->settingsButton->setEnabled(true);
 
 }
 
@@ -116,13 +116,25 @@ void MainWindow::openAndLoadConfiguration()
         processLine(line);
     }
 
-    setupSimulationTab();
+    SimSettingsDialog::SimSettings simSettings = simSettingsDialog->simSettings();
+    simulation->setEpsilon(simSettings.epsilon);
+    SimulationTime simulationTime;
+    simulationTime.from = simSettings.timeFrom;
+    simulationTime.to = simSettings.timeTo;
+    simulationTime.step = simSettings.timeStep;
+    simulation->setTime(simulationTime);
+
+    setupSimulationTab(simSettings.timeFrom,simSettings.timeTo);
+    setupAlgorithmResultTab(simSettings.timeFrom,simSettings.timeTo);
+
     setupSceneViewTab();
 
     ui->load->setEnabled(false);
     ui->simulate->setEnabled(true);
     ui->save->setEnabled(true);
     ui->clear->setEnabled(true);
+    ui->settingsButton->setEnabled(false);
+
 
 }
 
@@ -141,17 +153,29 @@ void MainWindow::handleClearButton()
     }
     layout->addItem(new QSpacerItem(0,0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    resultPlot->detachItems();
-    QwtPlotGrid *grid = new QwtPlotGrid();
-    grid->attach( resultPlot );
-    grid->setPen(QPen(Qt::gray));
-    resultPlot->replot();
+    layout = ui->resultVerticalLayout;
+    while ((item = layout->takeAt(0))){
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
 
+    layout = ui->sceneVerticalLayout;
+    while ((item = layout->takeAt(0))){
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+    layout->addItem(new QSpacerItem(0,0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
     ui->load->setEnabled(true);
     ui->simulate->setEnabled(false);
     ui->save->setEnabled(false);
     ui->clear->setEnabled(false);
+    ui->settingsButton->setEnabled(true);
+
 }
 
 void MainWindow::handleSave()
@@ -171,10 +195,15 @@ void MainWindow::handleExportAlgorithmResults()
     algorithm->exportAlgorithmResultsToMatlabScript();
 }
 
+void MainWindow::handleSimulate()
+{
+    simulation->simulate();
+}
+
 
 void MainWindow::initActionsConnections()
 {
-    connect(ui->simulate, SIGNAL(clicked()), simulation, SLOT(simulate()));
+    connect(ui->simulate, SIGNAL(clicked()), this, SLOT(handleSimulate()));
 
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
@@ -213,20 +242,20 @@ void MainWindow::sendStopSignal(){
 
 }
 
-void MainWindow::setupSimulationTab()
+void MainWindow::setupSimulationTab(double from, double to)
 {
     std::vector<Receiver *> receivers = simulation->getReceivers();
 
     for(auto r=receivers.begin();r!=receivers.end();r++){
         std::cout<<(*r)->getReceiverNumber()<<std::endl;
-        QwtPlot* plot = (*r)->getSignal()->getPlot();
+        QwtPlot* plot = (*r)->getSignal()->getPlot(from, to);
         plot->setMaximumHeight(150);
         createXAxisLine(plot);
         ui->plotLayout->addWidget(plot);
     }
 
     plot = new QwtPlot();
-    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    plot->setAxisScale( plot->xBottom, from, to );
     plot->setAxisScale( plot->yLeft, -1.0, 26);
     plot->setAxisTitle(plot->xBottom,"time [us]");
     plot->setAxisTitle(plot->yLeft,"Δt [us]");
@@ -237,10 +266,10 @@ void MainWindow::setupSimulationTab()
 
 }
 
-void MainWindow::setupAlgorithmResultTab()
+void MainWindow::setupAlgorithmResultTab(double from, double to)
 {
     resultPlot = new QwtPlot;
-    resultPlot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    resultPlot->setAxisScale( plot->xBottom, from, to );
     resultPlot->setAxisScale( plot->yLeft, -90.0, 90.0);
     resultPlot->setAxisTitle(plot->yLeft,"angle [degree]");
     resultPlot->setAxisTitle(plot->xBottom,"time [us]");

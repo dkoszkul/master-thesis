@@ -59,7 +59,6 @@ private:
     RealMeasurement *realMeasurement;
     QwtPlot *algorithmResultPlot;
 
-    int *distanceBetweenReceiversInMm; //not used yet
     std::vector<Point *> resultPoints;
 
     bool CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki,double frequency,double &AngleSin);

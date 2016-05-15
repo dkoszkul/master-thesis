@@ -22,6 +22,11 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 
+struct SimulationTime {
+    double from;
+    double to;
+    double step;
+};
 
 using namespace std;
 
@@ -41,6 +46,9 @@ private:
     std::map<int,std::vector<double>> deltaTByReceiverNumber;
     std::map<int,std::vector<double>> timeByReceiverNumber;
     std::vector<Point *> algorithmResultsToPlot;
+
+    double epsilon;
+    SimulationTime time;
 
     bool allReceiversHaveSignals(bool* signalTable, int size);
     void detectZeroCrossings();
@@ -63,8 +71,9 @@ public:
     Object *getEmitter() const;
 
     void setResultPlot(QwtPlot *value);
+    void setEpsilon(double value);
+    void setTime(const SimulationTime &value);
 
-public slots:
     void simulate();
 };
 

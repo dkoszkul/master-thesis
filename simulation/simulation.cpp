@@ -29,6 +29,7 @@ void Simulation::simulate()
 {
     deltaTByReceiverNumber.clear();
     timeByReceiverNumber.clear();
+    algorithmResultsToPlot.clear();
 
     std::cout<<"simulate"<<std::endl;
     std::cout<<"In the simulation we have "<<this->obstacles.size()<<" obstacles and "<<this->receivers.size()<<" receivers"<<std::endl;
@@ -125,7 +126,7 @@ void Simulation::detectZeroCrossings()
 {
     // [1] method showSignals() computes signal values in every time tick
     for(auto r=receivers.begin();r!=receivers.end();r++){
-        (*r)->getSignal()->showSignals();
+        (*r)->getSignal()->showSignals(this->time.from,this->time.to,this->time.step);
     }
 
     // [2] initialize necessary variables
@@ -198,6 +199,8 @@ double  previousZeroCrossingUs = 0;
     signalPlot->attach( resultPlot );
     std::vector<double> x;
     std::vector<double> y;
+    signalPlot->setSamples(x.data(),y.data(),x.size());
+     plot->replot();
     for(auto r=algorithmResultsToPlot.begin();r!=algorithmResultsToPlot.end();r++){
         x.push_back((*r)->getX());
         y.push_back((*r)->getY());
@@ -221,7 +224,7 @@ void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime, double sign
     int r0R1DistanceInMm = receivers.at(1)->getPositionY() - receivers.at(0)->getPositionY();
     int r1R2DistanceInMm = receivers.at(2)->getPositionY() - receivers.at(1)->getPositionY();
 
-    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT, signalFrequency);
+    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT, signalFrequency, this->epsilon);
     Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
     algorithmResultsToPlot.push_back(point);
 
@@ -281,4 +284,14 @@ Object *Simulation::getEmitter() const
 void Simulation::setResultPlot(QwtPlot *value)
 {
     resultPlot = value;
+}
+
+void Simulation::setEpsilon(double value)
+{
+    epsilon = value;
+}
+
+void Simulation::setTime(const SimulationTime &value)
+{
+    time = value;
 }

@@ -86,6 +86,7 @@ void Algorithm::setAlgorithmResultPlot(QwtPlot *value)
 
 void Algorithm::handleRealResults()
 {
+    resultPoints.clear();
     QString filename = QFileDialog::getOpenFileName(
                 mainWindow,
                 tr("Open file with measurement results..."),

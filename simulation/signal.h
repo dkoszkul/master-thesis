@@ -21,7 +21,7 @@ public:
 
     void addTime(double time);
     void clear();
-    void showSignals();
+    void showSignals(double from, double to, double step);
 
     void setSignalPlot(QwtPlotCurve *value);
     void setPlot(QwtPlot *value);
@@ -30,13 +30,13 @@ public:
     std::vector<double> getSignalX() const;
 
     QwtPlotCurve *getSignalPlot() const;
-    QwtPlot *getPlot() const;
+    QwtPlot *getPlot(double from, double to);
     double getSignalStep() const;
 
 private:
-    double signalMin = 0.0;
-    double signalMax = 1500.0;
-    double signalStep = 1.0;
+    double signalMin;
+    double signalMax;
+    double signalStep;
     std::list<double> times;
     std::vector<double> signalY;
     std::vector<double> signalX;

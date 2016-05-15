@@ -64,6 +64,7 @@ private slots:
     void handleClearButton();
     void handleSave();
     void handleExportAlgorithmResults();
+    void handleSimulate();
 
 private:
     Ui::MainWindow *ui;
@@ -81,8 +82,8 @@ private:
     SimSettingsDialog *simSettingsDialog;
     MatlabExporter *matlabExporter;
 
-    void setupSimulationTab();
-    void setupAlgorithmResultTab();
+    void setupSimulationTab(double from, double to);
+    void setupAlgorithmResultTab(double from, double to);
     void setupSceneViewTab();
 
     QwtPlot* plot;
