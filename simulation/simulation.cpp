@@ -164,20 +164,18 @@ double  previousZeroCrossingUs = 0;
                     // [.] raise doMeasurement flag if zero-crossing belongs to the reference signal
                     if((*r)->getReceiverNumber() == referenceReceiver){
 
-                        std::cout<<(*r)->getSignal()->getSignalX().at(uS) - previousZeroCrossingUs<<std::endl;
+                        //std::cout<<(*r)->getSignal()->getSignalX().at(uS) - previousZeroCrossingUs<<std::endl;
                         double actualFrequency = (*r)->getSignal()->getSignalX().at(uS) - previousZeroCrossingUs;
                         runTheAlgorithm(referenceReceiverZeroCrossTime, actualFrequency);
                         previousZeroCrossingUs = (*r)->getSignal()->getSignalX().at(uS);
 
                         doMeasurement = true;
                         referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
-                        //std::cout<<" ---------------";
                     }
                     // [.] measure the time if doMeasurement flag is raised
                     if(doMeasurement){
                         deltaTByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime);
                         timeByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS));
-                       // std::cout<<"("<<receiverNumber<<","<<((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime)<<") ";
                     }
                 }
 
@@ -224,6 +222,7 @@ void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime, double sign
     int r0R1DistanceInMm = receivers.at(1)->getPositionY() - receivers.at(0)->getPositionY();
     int r1R2DistanceInMm = receivers.at(2)->getPositionY() - receivers.at(1)->getPositionY();
 
+//uncomment this line to get readings to doctor's code    //  std::cout<<"0 "<<referenceReceiverZeroCrossTime<<" "<<Receiver1deltaT<<" "<<Receiver2deltaT<<" 0 "<<signalFrequency<<std::endl;
     AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT, signalFrequency, this->epsilon);
     Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
     algorithmResultsToPlot.push_back(point);
@@ -234,8 +233,8 @@ void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime, double sign
     m->attach( resultPlot );
     resultPlot->replot();
 
-    std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
-    std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
+   // std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
+   // std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
 }
 
 void Simulation::plotPhaseShift()
