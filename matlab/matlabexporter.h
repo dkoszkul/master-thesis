@@ -17,6 +17,7 @@
 #include "sensors/emitter.h"
 #include "sensors/obstacle.h"
 #include "simulation/simulation.h"
+#include "simulation/point.h"
 
 class MatlabExporter : public QObject
 {
@@ -27,9 +28,6 @@ public:
     void setObstacles(const std::list<Obstacle *> &value);
     void setSimulation(Simulation *value);
     void exportResults(QString *filename);
-
-    void exportAlgorithmResultsToMatlabScript(std::vector<Point *> &points, QString *filename);
-
 private:
     Simulation* simulation;
 

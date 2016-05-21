@@ -75,6 +75,7 @@ public:
     void setTime(const SimulationTime &value);
 
     void simulate();
+    std::vector<Point *> getAlgorithmResultsToPlot() const;
 };
 
 #endif // SIMULATION_H

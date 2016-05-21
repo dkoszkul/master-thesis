@@ -79,14 +79,29 @@ void MatlabExporter::exportResults(QString* filename){
             stream<<"plot(x"<<i<<",y"<<i<<");"<<endl;
         }
 
+        stream<<"figure()"<<endl;
+        stream<<"grid on;"<<endl;
+        stream<<"hold on;"<<endl;
+        std::vector<Point *> algResPlot = simulation->getAlgorithmResultsToPlot();
+         for(auto point = algResPlot.begin(); point != algResPlot.end();point++){
+             stream<<"plot("<<(*point)->getX()<<","<<(*point)->getY()<<",'r.','MarkerSize',12);"<<endl;
+         }
+         stream<<"x=[ ";
+         for(auto point = algResPlot.begin(); point != algResPlot.end();point++){
+             stream<<(*point)->getX()<<" ";
+         }
+         stream<<"];"<<endl;
+
+         stream<<"y=[ ";
+         for(auto point = algResPlot.begin(); point != algResPlot.end();point++){
+             stream<<(*point)->getY()<<" ";
+         }
+         stream<<"];"<<endl;
+         stream<<"plot(x,y);"<<endl;
+
     }
     file.close();
 
-}
-
-void MatlabExporter::exportAlgorithmResultsToMatlabScript(std::vector<Point *> &points, QString *filename)
-{
-std::cout<<"dupa"<<std::endl;
 }
 
 void MatlabExporter::setSimulation(Simulation *value)

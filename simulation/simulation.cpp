@@ -294,3 +294,8 @@ void Simulation::setTime(const SimulationTime &value)
 {
     time = value;
 }
+
+std::vector<Point *> Simulation::getAlgorithmResultsToPlot() const
+{
+    return algorithmResultsToPlot;
+}
