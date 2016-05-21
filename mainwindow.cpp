@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     serial = new QSerialPort(this);
     status = new QLabel;
     settings = new SettingsDialog;
+    simSettingsDialog = new SimSettingsDialog;
     matlabExporter = new MatlabExporter;
     algorithm = new Algorithm;
     algorithm->setMainWindow(this);
@@ -28,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     matlabExporter->setSimulation(simulation);
 
     initActionsConnections();
-    setupAlgorithmResultTab();
 
     ui->simulate->setEnabled(false);
     ui->save->setEnabled(false);
     ui->clear->setEnabled(false);
+    ui->settingsButton->setEnabled(true);
 
 }
 
@@ -115,12 +116,25 @@ void MainWindow::openAndLoadConfiguration()
         processLine(line);
     }
 
-    setupSimulationTab();
+    SimSettingsDialog::SimSettings simSettings = simSettingsDialog->simSettings();
+    simulation->setEpsilon(simSettings.epsilon);
+    SimulationTime simulationTime;
+    simulationTime.from = simSettings.timeFrom;
+    simulationTime.to = simSettings.timeTo;
+    simulationTime.step = simSettings.timeStep;
+    simulation->setTime(simulationTime);
+
+    setupSimulationTab(simSettings.timeFrom,simSettings.timeTo);
+    setupAlgorithmResultTab(simSettings.timeFrom,simSettings.timeTo);
+
+    setupSceneViewTab();
 
     ui->load->setEnabled(false);
     ui->simulate->setEnabled(true);
     ui->save->setEnabled(true);
     ui->clear->setEnabled(true);
+    ui->settingsButton->setEnabled(false);
+
 
 }
 
@@ -139,17 +153,29 @@ void MainWindow::handleClearButton()
     }
     layout->addItem(new QSpacerItem(0,0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    resultPlot->detachItems();
-    QwtPlotGrid *grid = new QwtPlotGrid();
-    grid->attach( resultPlot );
-    grid->setPen(QPen(Qt::gray));
-    resultPlot->replot();
+    layout = ui->resultVerticalLayout;
+    while ((item = layout->takeAt(0))){
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
 
+    layout = ui->sceneVerticalLayout;
+    while ((item = layout->takeAt(0))){
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+    layout->addItem(new QSpacerItem(0,0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
     ui->load->setEnabled(true);
     ui->simulate->setEnabled(false);
     ui->save->setEnabled(false);
     ui->clear->setEnabled(false);
+    ui->settingsButton->setEnabled(true);
+
 }
 
 void MainWindow::handleSave()
@@ -169,10 +195,15 @@ void MainWindow::handleExportAlgorithmResults()
     algorithm->exportAlgorithmResultsToMatlabScript();
 }
 
+void MainWindow::handleSimulate()
+{
+    simulation->simulate();
+}
+
 
 void MainWindow::initActionsConnections()
 {
-    connect(ui->simulate, SIGNAL(clicked()), simulation, SLOT(simulate()));
+    connect(ui->simulate, SIGNAL(clicked()), this, SLOT(handleSimulate()));
 
     connect(serial, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(handleError(QSerialPort::SerialPortError)));
     connect(serial, SIGNAL(readyRead()), this, SLOT(readData()));
@@ -189,6 +220,8 @@ void MainWindow::initActionsConnections()
     connect(ui->save, SIGNAL(clicked()), this, SLOT(handleSave()));
     connect(ui->loadRealResultsButton, SIGNAL(clicked()), algorithm, SLOT(handleRealResults()));
     connect(ui->saveAlgorithmResults, SIGNAL(clicked()),this, SLOT(handleExportAlgorithmResults()));
+
+    connect(ui->settingsButton, SIGNAL(clicked()), simSettingsDialog, SLOT(show()));
 }
 
 void MainWindow::showStatusMessage(const QString &message)
@@ -209,20 +242,20 @@ void MainWindow::sendStopSignal(){
 
 }
 
-void MainWindow::setupSimulationTab()
+void MainWindow::setupSimulationTab(double from, double to)
 {
     std::vector<Receiver *> receivers = simulation->getReceivers();
 
     for(auto r=receivers.begin();r!=receivers.end();r++){
         std::cout<<(*r)->getReceiverNumber()<<std::endl;
-        QwtPlot* plot = (*r)->getSignal()->getPlot();
+        QwtPlot* plot = (*r)->getSignal()->getPlot(from, to);
         plot->setMaximumHeight(150);
         createXAxisLine(plot);
         ui->plotLayout->addWidget(plot);
     }
 
     plot = new QwtPlot();
-    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    plot->setAxisScale( plot->xBottom, from, to );
     plot->setAxisScale( plot->yLeft, -1.0, 26);
     plot->setAxisTitle(plot->xBottom,"time [us]");
     plot->setAxisTitle(plot->yLeft,"Δt [us]");
@@ -233,10 +266,10 @@ void MainWindow::setupSimulationTab()
 
 }
 
-void MainWindow::setupAlgorithmResultTab()
+void MainWindow::setupAlgorithmResultTab(double from, double to)
 {
     resultPlot = new QwtPlot;
-    resultPlot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
+    resultPlot->setAxisScale( plot->xBottom, from, to );
     resultPlot->setAxisScale( plot->yLeft, -90.0, 90.0);
     resultPlot->setAxisTitle(plot->yLeft,"angle [degree]");
     resultPlot->setAxisTitle(plot->xBottom,"time [us]");
@@ -251,11 +284,76 @@ void MainWindow::setupAlgorithmResultTab()
     ui->resultVerticalLayout->addWidget(resultPlot);
 }
 
+void MainWindow::setupSceneViewTab()
+{
+    scene = new QwtPlot;
+    int xMin=0, xMax=0, yMin=0, yMax=0;
+
+    xMin = xMax = simulation->getEmitter()->getPositionX();
+    yMin = yMax = simulation->getEmitter()->getPositionY();
+
+    QwtPlotMarker* m = new QwtPlotMarker();
+    m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::black, Qt::NoPen, QSize( 10, 10 ) ) );
+    m->setValue( QPointF( simulation->getEmitter()->getPositionX(), simulation->getEmitter()->getPositionY()) );
+    m->attach( scene );
+
+    for(auto r=simulation->getReceivers().begin();r!=simulation->getReceivers().end();r++){
+        int receiverX = (*r)->getPositionX();
+        int receiverY = (*r)->getPositionY();
+        if(receiverX<xMin){
+            xMin = receiverX;
+        }else if(receiverX > xMax){
+            xMax = receiverX;
+        }
+
+        if(receiverY<yMin){
+            yMin = receiverY;
+        }else if(receiverY > yMax){
+            yMax = receiverY;
+        }
+        QwtPlotMarker* m = new QwtPlotMarker();
+        m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::blue, Qt::NoPen, QSize( 30, 30 ) ) );
+        m->setValue( QPointF( receiverX, receiverY ) );
+        m->attach( scene );
+    }
+
+    for(auto r=simulation->getObstacles().begin();r!=simulation->getObstacles().end();r++){
+        int receiverX = (*r)->getPositionX();
+        int receiverY = (*r)->getPositionY();
+        if(receiverX<xMin){
+            xMin = receiverX;
+        }else if(receiverX > xMax){
+            xMax = receiverX;
+        }
+
+        if(receiverY<yMin){
+            yMin = receiverY;
+        }else if(receiverY > yMax){
+            yMax = receiverY;
+        }
+        QwtPlotMarker* m = new QwtPlotMarker();
+        m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::black, Qt::NoPen, QSize( 30, 30 ) ) );
+        m->setValue( QPointF( receiverX, receiverY ) );
+        m->attach( scene );
+    }
+
+    scene->setAxisScale( plot->xBottom, xMin-15, xMax+15);
+    scene->setAxisScale( plot->yLeft, yMin-15, yMax+15);
+    scene->setAxisTitle(plot->yLeft,"Y distance [mm]");
+    scene->setAxisTitle(plot->xBottom,"X distance [mm]");
+    QwtPlotGrid *grid = new QwtPlotGrid();
+    grid->attach( scene );
+    grid->setPen(QPen(Qt::gray));
+
+    ui->sceneVerticalLayout->addWidget(scene);
+}
+
 void MainWindow::createXAxisLine(QwtPlot* plot)
 {
     QwtPlotMarker *mY = new QwtPlotMarker();
     mY->setLabelAlignment( Qt::AlignRight | Qt::AlignTop );
     mY->setLineStyle( QwtPlotMarker::HLine );
+    mY->setLinePen(QPen(Qt::gray));
     mY->setYValue( 0.0 );
     mY->attach( plot );
 }

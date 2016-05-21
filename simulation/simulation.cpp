@@ -29,6 +29,7 @@ void Simulation::simulate()
 {
     deltaTByReceiverNumber.clear();
     timeByReceiverNumber.clear();
+    algorithmResultsToPlot.clear();
 
     std::cout<<"simulate"<<std::endl;
     std::cout<<"In the simulation we have "<<this->obstacles.size()<<" obstacles and "<<this->receivers.size()<<" receivers"<<std::endl;
@@ -125,7 +126,7 @@ void Simulation::detectZeroCrossings()
 {
     // [1] method showSignals() computes signal values in every time tick
     for(auto r=receivers.begin();r!=receivers.end();r++){
-        (*r)->getSignal()->showSignals();
+        (*r)->getSignal()->showSignals(this->time.from,this->time.to,this->time.step);
     }
 
     // [2] initialize necessary variables
@@ -142,7 +143,7 @@ void Simulation::detectZeroCrossings()
     int referenceReceiver = 0;
     int referenceReceiverZeroCrossTime = 0;
     bool doMeasurement = false;
-
+double  previousZeroCrossingUs = 0;
     // [3] compute zero crossings
     for(int uS=0;uS<signalProbesSize;uS++){
         // iteration over all signals and find phase delays
@@ -163,17 +164,18 @@ void Simulation::detectZeroCrossings()
                     // [.] raise doMeasurement flag if zero-crossing belongs to the reference signal
                     if((*r)->getReceiverNumber() == referenceReceiver){
 
-                        runTheAlgorithm(referenceReceiverZeroCrossTime);
+                        //std::cout<<(*r)->getSignal()->getSignalX().at(uS) - previousZeroCrossingUs<<std::endl;
+                        double actualFrequency = (*r)->getSignal()->getSignalX().at(uS) - previousZeroCrossingUs;
+                        runTheAlgorithm(referenceReceiverZeroCrossTime, actualFrequency);
+                        previousZeroCrossingUs = (*r)->getSignal()->getSignalX().at(uS);
 
                         doMeasurement = true;
                         referenceReceiverZeroCrossTime = (*r)->getSignal()->getSignalX().at(uS);
-                        std::cout<<" ---------------";
                     }
                     // [.] measure the time if doMeasurement flag is raised
                     if(doMeasurement){
                         deltaTByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime);
                         timeByReceiverNumber[receiverNumber].push_back((*r)->getSignal()->getSignalX().at(uS));
-                        std::cout<<"("<<receiverNumber<<","<<((*r)->getSignal()->getSignalX().at(uS)-referenceReceiverZeroCrossTime)<<") ";
                     }
                 }
 
@@ -188,6 +190,21 @@ void Simulation::detectZeroCrossings()
         }
     }
 
+    QwtPlotCurve* signalPlot = new QwtPlotCurve( "" );
+    signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+    signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    signalPlot->setPen( Qt::blue );
+    signalPlot->attach( resultPlot );
+    std::vector<double> x;
+    std::vector<double> y;
+    signalPlot->setSamples(x.data(),y.data(),x.size());
+     plot->replot();
+    for(auto r=algorithmResultsToPlot.begin();r!=algorithmResultsToPlot.end();r++){
+        x.push_back((*r)->getX());
+        y.push_back((*r)->getY());
+    }
+    signalPlot->setSamples(x.data(),y.data(),x.size());
+
     plotPhaseShift();
     plot->replot();
 
@@ -198,14 +215,15 @@ void Simulation::detectZeroCrossings()
     delete[] previousProbes;
 }
 
-void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime)
-{
-    double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),25.0); //This is unnecessary in sumulation but in future it may be useful
-    double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),25.0); //This is unnecessary in sumulation but in future it may be useful
+void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime, double signalFrequency){
+
+    double Receiver1deltaT = algorithm->correctTime(deltaTByReceiverNumber[1].back(),signalFrequency); //This is unnecessary in sumulation but in future it may be useful
+    double Receiver2deltaT = algorithm->correctTime(deltaTByReceiverNumber[2].back(),signalFrequency); //This is unnecessary in sumulation but in future it may be useful
     int r0R1DistanceInMm = receivers.at(1)->getPositionY() - receivers.at(0)->getPositionY();
     int r1R2DistanceInMm = receivers.at(2)->getPositionY() - receivers.at(1)->getPositionY();
 
-    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT);
+//uncomment this line to get readings to doctor's code    //  std::cout<<"0 "<<referenceReceiverZeroCrossTime<<" "<<Receiver1deltaT<<" "<<Receiver2deltaT<<" 0 "<<signalFrequency<<std::endl;
+    AlgorithmResult aResult = algorithm->findAngleByKValuesFor(r0R1DistanceInMm,r1R2DistanceInMm,Receiver1deltaT, Receiver2deltaT, signalFrequency, this->epsilon);
     Point *point = new Point(referenceReceiverZeroCrossTime,aResult.angle);
     algorithmResultsToPlot.push_back(point);
 
@@ -215,8 +233,8 @@ void Simulation::runTheAlgorithm(int referenceReceiverZeroCrossTime)
     m->attach( resultPlot );
     resultPlot->replot();
 
-    std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
-    std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
+   // std::cout<<aResult.status<<" angle: "<<aResult.angle<<std::endl;
+   // std::cout<<"POINT: ("<<point->getX()<<","<<point->getY()<<")"<<std::endl;
 }
 
 void Simulation::plotPhaseShift()
@@ -265,4 +283,14 @@ Object *Simulation::getEmitter() const
 void Simulation::setResultPlot(QwtPlot *value)
 {
     resultPlot = value;
+}
+
+void Simulation::setEpsilon(double value)
+{
+    epsilon = value;
+}
+
+void Simulation::setTime(const SimulationTime &value)
+{
+    time = value;
 }

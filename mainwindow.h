@@ -9,6 +9,8 @@
 #include <QtSerialPort/QSerialPort>
 #include <QFileDialog>
 
+#include "simsettingsdialog.h"
+
 #include "console/console.h"
 #include "simulation/signal.h"
 #include "simulation/simulation.h"
@@ -62,6 +64,7 @@ private slots:
     void handleClearButton();
     void handleSave();
     void handleExportAlgorithmResults();
+    void handleSimulate();
 
 private:
     Ui::MainWindow *ui;
@@ -76,13 +79,16 @@ private:
     Console *console;
     QSerialPort *serial;
     SettingsDialog *settings;
+    SimSettingsDialog *simSettingsDialog;
     MatlabExporter *matlabExporter;
 
-    void setupSimulationTab();
-    void setupAlgorithmResultTab();
+    void setupSimulationTab(double from, double to);
+    void setupAlgorithmResultTab(double from, double to);
+    void setupSceneViewTab();
 
     QwtPlot* plot;
     QwtPlot *resultPlot;
+    QwtPlot *scene;
     void processLine(QString line);
 };
 

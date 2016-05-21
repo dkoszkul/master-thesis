@@ -10,31 +10,35 @@ Algorithm::Algorithm(QObject *parent) : QObject(parent)
  realMeasurement = new RealMeasurement;
 }
 
-AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2, double epsilon)
-{
-    std::cout<<std::endl<<"I have "<<timeDelay1<<" and "<<timeDelay2<<" and distances: "<<r0R1DistanceInMm<<" , "<<r1R2DistanceInMm<< std::endl;
+AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2DistanceInMm, double timeDelay1, double timeDelay2,double frequency, double epsilon) {
     AlgorithmResult result;
-
     int  K1_Idx, K2_Idx;
     int  K1_res = K_EMPTY_INDEX, K2_res = K_EMPTY_INDEX;
     double  AngleSin1, AngleSin2;
 
     for (K1_Idx = K_MIN; K1_Idx <= K_MAX; ++K1_Idx) {
-        if (!CheckK_4_RecData(r0R1DistanceInMm,timeDelay1,K1_Idx,AngleSin1)) continue;
+        if (!CheckK_4_RecData(r0R1DistanceInMm,timeDelay1,K1_Idx,frequency, AngleSin1)) continue;
         for  (K2_Idx = K_MIN; K2_Idx <= K_MAX; ++K2_Idx) {
-          if (!CheckK_4_RecData(r0R1DistanceInMm+r1R2DistanceInMm,timeDelay2,K2_Idx,AngleSin2)) continue;
+          if (!CheckK_4_RecData(r0R1DistanceInMm+r1R2DistanceInMm,timeDelay2,K2_Idx,frequency, AngleSin2)) continue;
           if (fabs(AngleSin1-AngleSin2) >= epsilon) continue;
           if (K1_res != K_EMPTY_INDEX) {
+              cout<<"-------------------------------------------"<<endl;
             cout << ":)  Ambiguous solution found." << endl
              << "       1.  k1 = " << K1_res << "  k2 = " << K2_res << endl
-             << "       2.  k1 = " << K1_Idx << "  k2 = " << K2_Idx << endl
-             << endl;
-
+             << "       2.  k1 = " << K1_Idx << "  k2 = " << K2_Idx << endl;
+            cout << " ***   K1: " << K1_Idx << "    K2: " << K1_Idx << " angle " <<  RAD2DEG(asin((AngleSin1+AngleSin2)/2)) <<endl;
+cout<<"------------"<<endl;
+CheckK_4_RecData(r0R1DistanceInMm,timeDelay1,K1_res,frequency, AngleSin1);
+CheckK_4_RecData(r0R1DistanceInMm+r1R2DistanceInMm,timeDelay2,K2_res,frequency, AngleSin2);
+cout << " ***   K1res: " << K1_res << "    K2res: " << K2_res << " angle " <<  RAD2DEG(asin((AngleSin1+AngleSin2)/2)) <<endl;
+cout<<"-----------------------------------------"<<endl;
+//result.angle = RAD2DEG(asin((AngleSin1+AngleSin2)/2));
+cout<<"new angle: " << result.angle << endl;
             return result;
           }
 
           K1_res = K1_Idx;  K2_res = K2_Idx;
-          //      cout << " ***   K1: " << K1_res << "    K2: " << K2_res << endl;
+                cout << " ***   K1k: " << K1_res << "    K2k: " << K2_res << " angle " <<  RAD2DEG(asin((AngleSin1+AngleSin2)/2)) <<endl;
           result.angle = RAD2DEG(asin((AngleSin1+AngleSin2)/2));
         }
     }
@@ -43,6 +47,7 @@ AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2D
     }else{
         result.status = TK_none;
     }
+    cout<<"F new angle: " << result.angle << endl;
 
     return result;
 }
@@ -50,16 +55,15 @@ AlgorithmResult Algorithm::findAngleByKValuesFor(int r0R1DistanceInMm, int r1R2D
 /*!
  * A value for angle determination is computed
  */
-bool Algorithm::CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki,double &AngleSin)
-{
-    double  Part_Upper =
-            URS__ULTRASONIC_WAVE_SPEED_mmUS*DTime_us
-            + Ki*URS__ULTRASONIC_WAVELENGTH__mm;
+bool Algorithm::CheckK_4_RecData(double Gap_R_mm, double DTime_us,int Ki, double frequency,double &AngleSin) {
+    double actualFrequency = ( pow(10,6)/frequency);
+    double  Part_Upper = URS__ULTRASONIC_WAVE_SPEED_mmUS*DTime_us + Ki*(URS__ULTRASONIC_WAVE_SPEED__mmS / actualFrequency);
     double  Base = Gap_R_mm;  // It can be < 0.
 
     if (fabs(Part_Upper) > fabs(Base)) return false;
     AngleSin = Part_Upper/Base;
     return true;
+
 }
 
 double Algorithm::correctTime( double Delta_T_us, double T_period_us)
@@ -86,6 +90,7 @@ void Algorithm::setAlgorithmResultPlot(QwtPlot *value)
 
 void Algorithm::handleRealResults()
 {
+    resultPoints.clear();
     QString filename = QFileDialog::getOpenFileName(
                 mainWindow,
                 tr("Open file with measurement results..."),
@@ -118,7 +123,7 @@ void Algorithm::handleRealResults()
     }
 
     for(unsigned int i=0; i< realMeasurement->R0Times.size(); i++){
-        AlgorithmResult aResult = findAngleByKValuesFor(realMeasurement->R0R1InMm,realMeasurement->R1R2InMm,realMeasurement->R1Times.at(i), realMeasurement->R2Times.at(i));
+        AlgorithmResult aResult = findAngleByKValuesFor(realMeasurement->R0R1InMm,realMeasurement->R1R2InMm,realMeasurement->R1Times.at(i),realMeasurement->TWaves.at(i), realMeasurement->R2Times.at(i));
 
         QwtPlotMarker* m = new QwtPlotMarker();
         m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 )));
@@ -136,7 +141,7 @@ void Algorithm::exportAlgorithmResultsToMatlabScript()
 {
     QString filename = QFileDialog::getSaveFileName(
                 mainWindow,
-                tr("Save simulation results..."),
+                tr("Save algorithm results..."),
                 "algorithmResult.m",
                 ".m"
                 );
@@ -152,6 +157,18 @@ void Algorithm::exportAlgorithmResultsToMatlabScript()
          for(auto point = resultPoints.begin(); point != resultPoints.end();point++){
              stream<<"plot("<<(*point)->getX()<<","<<(*point)->getY()<<",'o','MarkerSize',12);"<<endl;
          }
+         stream<<"x=[ ";
+         for(auto point = resultPoints.begin(); point != resultPoints.end();point++){
+             stream<<(*point)->getX()<<" ";
+         }
+         stream<<"];"<<endl;
+
+         stream<<"y=[ ";
+         for(auto point = resultPoints.begin(); point != resultPoints.end();point++){
+             stream<<(*point)->getY()<<" ";
+         }
+         stream<<"];"<<endl;
+         stream<<"plot(x,y);"<<endl;
     }
     file.close();
 

@@ -5,15 +5,7 @@
 
 Signal::Signal(QObject *parent) : QObject(parent)
 {
-    plot = new QwtPlot();
-    plot->setAxisScale( plot->xBottom, 0.0, 1500.0 );
-    plot->setAxisScale( plot->yLeft, -1.8, 1.8 );
 
-    signalPlot = new QwtPlotCurve( "signal" );
-    signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
-    signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
-    signalPlot->setPen( Qt::blue );
-    signalPlot->attach( plot );
 }
 
 Signal::~Signal()
@@ -70,8 +62,11 @@ void Signal::addTime(double time)
     times.push_back(time);
 }
 
-void Signal::showSignals()
+void Signal::showSignals(double from, double to, double step)
 {
+    this->signalMin = from;
+    this->signalMax = to;
+    this->signalStep = step;
     generateSignal();
 }
 
@@ -85,8 +80,19 @@ std::vector<double> Signal::getSignalX() const
     return signalX;
 }
 
-QwtPlot *Signal::getPlot() const
+QwtPlot *Signal::getPlot(double from, double to)
 {
+
+    plot = new QwtPlot();
+    plot->setAxisScale( plot->xBottom, from, to );
+    plot->setAxisScale( plot->yLeft, -1.8, 1.8 );
+
+    signalPlot = new QwtPlotCurve( "signal" );
+    signalPlot->setRenderHint( QwtPlotItem::RenderAntialiased );
+    signalPlot->setLegendAttribute( QwtPlotCurve::LegendShowLine, true );
+    signalPlot->setPen( Qt::blue );
+    signalPlot->attach( plot );
+
     return plot;
 }
 
