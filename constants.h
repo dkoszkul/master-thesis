@@ -12,8 +12,8 @@
 
 #define K_EMPTY_INDEX   200
 #define URS__SIG_FREQ_Hz    40000
-#define URS__ULTRASONIC_WAVE_SPEED__mmS    343000
-#define URS__ULTRASONIC_WAVE_SPEED_mmUS    0.343
+#define URS__ULTRASONIC_WAVE_SPEED__mmS    343200
+#define URS__ULTRASONIC_WAVE_SPEED_mmUS    0.3432
 #define URS__ULTRASONIC_WAVELENGTH__mm  (static_cast<double>(URS__ULTRASONIC_WAVE_SPEED__mmS)/URS__SIG_FREQ_Hz)
 #define DEG2RAD( x )  ((x)*M_PI/180)
 #define RAD2DEG( x )  ((x)*180/M_PI)
