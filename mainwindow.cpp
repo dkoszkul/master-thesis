@@ -15,8 +15,11 @@ MainWindow::MainWindow(QWidget *parent) :
     matlabExporter = new MatlabExporter;
     algorithm = new Algorithm;
     algorithm->setMainWindow(this);
+    resultPlot = new QwtPlot;
+    algorithm->setAlgorithmResultPlot(resultPlot);
 
     ui->setupUi(this);
+    ui->resultVerticalLayout->addWidget(resultPlot);
 
     console->setEnabled(false);
     ui->consoleLayout->addWidget(console);

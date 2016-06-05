@@ -90,6 +90,14 @@ void Algorithm::setAlgorithmResultPlot(QwtPlot *value)
 
 void Algorithm::handleRealResults()
 {
+    algorithmResultPlot->setAxisScale( algorithmResultPlot->xBottom, 0.0, 1500.0 );
+    algorithmResultPlot->setAxisScale( algorithmResultPlot->yLeft, -90.0, 90.0);
+    algorithmResultPlot->setAxisTitle(algorithmResultPlot->yLeft,"angle [degree]");
+    algorithmResultPlot->setAxisTitle(algorithmResultPlot->xBottom,"time [us]");
+    QwtPlotGrid *grid = new QwtPlotGrid();
+    grid->attach( algorithmResultPlot );
+    grid->setPen(QPen(Qt::gray));
+
     resultPoints.clear();
     QString filename = QFileDialog::getOpenFileName(
                 mainWindow,
@@ -123,13 +131,16 @@ void Algorithm::handleRealResults()
     }
 
     for(unsigned int i=0; i< realMeasurement->R0Times.size(); i++){
-        AlgorithmResult aResult = findAngleByKValuesFor(realMeasurement->R0R1InMm,realMeasurement->R1R2InMm,realMeasurement->R1Times.at(i),realMeasurement->TWaves.at(i), realMeasurement->R2Times.at(i));
-
+        AlgorithmResult aResult = findAngleByKValuesFor(realMeasurement->R0R1InMm,realMeasurement->R1R2InMm,realMeasurement->R1Times.at(i),realMeasurement->R2Times.at(i), realMeasurement->TWaves.at(i));
+std::cout<<"R "<<aResult.angle<<std::endl;
         QwtPlotMarker* m = new QwtPlotMarker();
         m->setSymbol(new QwtSymbol( QwtSymbol::Ellipse, Qt::red, Qt::NoPen, QSize( 10, 10 )));
         m->setValue( QPointF( realMeasurement->R0Times.at(i), aResult.angle ));
+        std::cout<<"1"<<std::endl;
         resultPoints.push_back(new Point(realMeasurement->R0Times.at(i), aResult.angle ));
+        std::cout<<"2"<<std::endl;
         m->attach( algorithmResultPlot );
+        std::cout<<"3"<<std::endl;
 
     }
     algorithmResultPlot->replot();
